@@ -1,0 +1,21 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "./src/*",
+    "src/app/service/validation",
+    "src/common/interface",
+    "src/feature",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
+}

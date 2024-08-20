@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import tokenUtils from "../utils/token.utils";
-import accountModel from "../model/account.model";
+import accountModel from "../feature/account/model/account.model";
 
 class ProtectedMiddleware {
   protectedRoute = expressAsyncHandler(

@@ -4,10 +4,8 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import useAccountDetails from "@/feature/account/hooks/useAccountDetails";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
-import FriendDetails from "@/feature/account/component/FriendDetails";
 import { useAuth } from "@/providers/AuthProvider";
 import { ArrowLeft } from "lucide-react-native";
-import useFriendDetails from "@/feature/friend/hooks/useFriendDetails";
 import AccountDetails from "@/feature/account/component/AccountDetails";
 
 const RootScreen = () => {
@@ -24,11 +22,7 @@ const RootScreen = () => {
     <>
       <DetailsHeader />
       <View className="bg-white flex-1 p-4">
-        {data?.requestStatus === "friend" ? (
-          <FriendDetails {...data} />
-        ) : (
-          <AccountDetails {...data} />
-        )}
+        <AccountDetails {...data} />
       </View>
     </>
   );

@@ -3,9 +3,9 @@ import React, { FC, ReactNode } from "react";
 import YStack from "@/common/components/stacks/YStack";
 import Avatar from "@/common/components/ui/Avatar";
 import XStack from "@/common/components/stacks/XStack";
-import { AccountDetails } from "../interface/account.interface";
+import { IAccount } from "../interface/account.interface";
 
-interface Props extends AccountDetails {
+interface Props extends IAccount {
   status?: string;
   children?: ReactNode;
 }
@@ -34,19 +34,11 @@ const ProfileDetails: FC<Props> = ({
         <XStack className="w-full px-4 justify-between items-center">
           <Text className="text-base text-center text-gray-600">Caloocan</Text>
 
-          <Text className="text-base text-center text-gray-600">
-            {props.followersCount || 0} Friends
-          </Text>
-
-          <Text className="text-base text-center text-gray-600">
-            {props.gender || "Male"}
-          </Text>
+          <Text className="text-base text-center text-gray-600"></Text>
         </XStack>
         {/* Bio */}
         <View className="justify-center items-center">
-          <Text className="text-base">
-            {props?.bio || "Bio is not available"}
-          </Text>
+          <Text className="text-base"></Text>
         </View>
 
         {children}

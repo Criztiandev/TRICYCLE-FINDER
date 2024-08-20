@@ -1,4 +1,3 @@
-import PostCard from "@/feature/post/component/PostCard";
 import { Href, Stack, useRouter } from "expo-router";
 import ScreenBaseLayout from "@/layout/ScreenBaseLayout";
 import { FlashList } from "@shopify/flash-list";
@@ -9,18 +8,13 @@ import BottomSheet from "@/common/components/ui/BottomSheet";
 import { TouchableOpacity, View } from "react-native";
 import { useCallback, useMemo, useRef } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import LoadingScreen from "@/layout/screen/LoadingScreen";
-import ErrorScreen from "@/layout/screen/ErrorScreen";
-import { PostDetails } from "@/feature/post/interface/post.interface";
-import usePosts from "@/feature/post/hooks/usePosts";
 import Input from "@/common/components/ui/Input";
 
 const RootScreen = () => {
-  const { data: post, isLoading, isError, error } = usePosts();
   const router = useRouter();
 
-  if (isLoading) return <LoadingScreen />;
-  if (isError) return <ErrorScreen error={error} />;
+  // if (isLoading) return <LoadingScreen />;
+  // if (isError) return <ErrorScreen error={error} />;
 
   return (
     <>
@@ -34,19 +28,9 @@ const RootScreen = () => {
           />
         </TouchableOpacity>
         <FlashList
-          data={post as PostDetails[]}
+          data={[{}]}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }: { item: PostDetails }) => (
-            <TouchableOpacity
-              onPress={() =>
-                router.navigate(
-                  `/user/post/details/${item._id}` as Href<string>
-                )
-              }
-            >
-              <PostCard {...item} />
-            </TouchableOpacity>
-          )}
+          renderItem={({ item }) => <View></View>}
           estimatedItemSize={100}
         />
       </ScreenBaseLayout>

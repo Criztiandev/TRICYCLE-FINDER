@@ -26,9 +26,12 @@ class AuthService {
 
   public loginUser = async (email: string, password: string) => {
     // check if user doesnt exist
-    const existingUser = await this.accountService.isAccountExist({
-      $or: [{ email }, { phoneNumber: email }],
-    });
+    const existingUser = await this.accountService.isAccountExist(
+      {
+        $or: [{ email }, { phoneNumber: email }],
+      },
+      "password"
+    );
 
     if (!existingUser) throw new Error("User doest exist");
 

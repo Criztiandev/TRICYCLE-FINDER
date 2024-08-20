@@ -11,15 +11,7 @@ import {
   AccountInfoStepValidation,
 } from "@/feature/auth/validation";
 import useRegister from "@/feature/auth/hooks/useRegister";
-import preferenceValidation, {
-  datingPreference,
-  runningPreference,
-} from "@/feature/account/validation/preference.validation";
-import RunningPreferenceInfoStep from "@/feature/auth/component/steps/PreferenceInfoStep";
-import DatingPreferenceInfoStep from "@/feature/auth/component/steps/DatingPreferenceInfoStep";
-import { accountPreferenceValidation } from "@/feature/account/validation/account.validation";
-import Toast from "react-native-toast-message";
-import { AccountWithPreferenceValue } from "@/feature/account/interface/account.interface";
+import { IAccount } from "@/feature/account/interface/account.interface";
 
 const RootScreen = () => {
   const { multiform, form, mutation } = useRegister({
@@ -43,11 +35,7 @@ const RootScreen = () => {
     }
 
     const payload = form.getValues();
-
-    if (typeof accountPreferenceValidation === "undefined") {
-      console.log("Validation went wrong");
-    }
-    mutation.mutate(payload as AccountWithPreferenceValue);
+    mutation.mutate(payload as IAccount);
   };
   return (
     <>
@@ -63,9 +51,9 @@ const RootScreen = () => {
               <FormProvider {...form}>{element}</FormProvider>
 
               <Button
-                className="w-full mb-3"
+                className="w-full mb-3 mt-4"
                 onPress={form.handleSubmit(onSubmit)}
-                disabled={mutation.isPending}
+                // disabled={mutation.isPending}
               >
                 {isLastStep ? "Sign up" : "Next"}
               </Button>
@@ -105,7 +93,5 @@ const StepsList = [
     component: <PersonalInfoStep />,
     validation: PersonalInfoStepValidation,
   },
-  { component: <RunningPreferenceInfoStep />, validation: runningPreference },
-  { component: <DatingPreferenceInfoStep />, validation: datingPreference },
   { component: <AccountInfoStep />, validation: AccountInfoStepValidation },
 ];

@@ -16,28 +16,6 @@ const RootLayout = () => {
       />
 
       <Tabs.Screen
-        name="track"
-        options={{
-          title: "Track",
-          headerShown: false,
-          tabBarIcon: (props) => (
-            <Disc color={props.focused ? "black" : props.color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="match"
-        options={{
-          title: "Match",
-          headerShown: false,
-          tabBarIcon: (props) => (
-            <Search color={props.focused ? "black" : props.color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
         name="account"
         options={{
           title: "Account",

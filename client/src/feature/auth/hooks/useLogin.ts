@@ -25,6 +25,7 @@ const useLogin = () => {
       await PublicAxios.post("/auth/login", value),
     onSuccess: async (response: AxiosResponse<LoginResponse>) => {
       const { payload } = response.data;
+      await storage.clear();
       await storage.setItem("accessToken", payload.accessToken);
       await storage.setItem("refreshToken", payload.refreshToken);
       await storage.setItem("auth", payload.user);

@@ -11,7 +11,6 @@ const RootLayout = () => {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tab)" />
           <Stack.Screen name="conversation" />
-          <Stack.Screen name="friend" />
         </Stack>
       </BottomSheetModalProvider>
     </ProtectedRoute>

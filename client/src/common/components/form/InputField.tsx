@@ -15,7 +15,7 @@ const InputField: FC<Props> = ({ className, ...props }) => {
   } = useFormContext();
 
   return (
-    <View className={cn(" w-full", className)}>
+    <View className={cn(" w-full mb-2", className)}>
       <Controller
         control={control}
         name={props.name}

@@ -17,8 +17,11 @@ class AccountService {
     return credentials;
   };
 
-  public isAccountExist = async (hits: FilterQuery<IAccount>) => {
-    return this.repository.fetchAccountByFilter(hits, "_id");
+  public isAccountExist = async (
+    hits: FilterQuery<IAccount>,
+    select?: string
+  ) => {
+    return this.repository.fetchAccountByFilter(hits, select || "_id");
   };
 
   public createUser = async (payload: IAccount) => {

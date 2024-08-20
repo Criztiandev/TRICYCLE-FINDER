@@ -11,7 +11,6 @@ import useLogin from "@/feature/auth/hooks/useLogin";
 import { LoginValue } from "@/feature/auth/interface/sign-in.interface";
 
 const RootScreen = () => {
-  const router = useRouter();
   const { form, mutation } = useLogin();
 
   const onSubmit = async (value: LoginValue) => {

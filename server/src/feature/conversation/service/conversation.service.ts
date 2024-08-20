@@ -1,7 +1,5 @@
-import { ObjectId } from "mongoose";
 import { IConversation } from "../interface/conversation.interface";
 import conversationRepository from "../repository/conversation.repository";
-import { AccountSchemaValue } from "../../../interface/account.interface";
 
 class ConversationService {
   private repository: conversationRepository;

@@ -1,10 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
-import accountModel from "../../account/model/account.model";
-import messageModel from "../../../model/message.model";
-import { AccountSchemaValue } from "../../../interface/account.interface";
-import conversationModel from "../../../model/conversation.model";
-import mongoose from "mongoose";
 import ConversationService from "../service/conversation.service";
 
 class ConversationController {

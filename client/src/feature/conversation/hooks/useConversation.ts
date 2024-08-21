@@ -14,7 +14,7 @@ interface ConversationData {
   messages: IMessage[];
 }
 
-const SOCKET_URL = "http://192.168.1.5:4000";
+const SOCKET_URL = "http://192.168.1.6:4000";
 
 const useConversation = (conversationID: string) => {
   const [messages, setMessages] = useState<IMessage[]>([]);

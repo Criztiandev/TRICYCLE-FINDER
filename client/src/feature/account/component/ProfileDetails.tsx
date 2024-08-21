@@ -20,8 +20,8 @@ const ProfileDetails: FC<Props> = ({
 }) => {
   return (
     <View className="relative">
-      <View className="h-[200px] border rounded-[5px]"></View>
-      <YStack className="absolute top-24 left-0 right-0 bottom-0 flex items-center space-y-4">
+      <View className="h-[200px]  rounded-[5px]"></View>
+      <YStack className="absolute top-8 left-0 right-0 bottom-0 flex items-center space-y-4">
         <Avatar size={150} />
         {/* Full Name */}
         <YStack className="justify-center justify-items-center">
@@ -30,45 +30,12 @@ const ProfileDetails: FC<Props> = ({
           </Text>
         </YStack>
 
-        {/* Details */}
-        <XStack className="w-full px-4 justify-between items-center">
-          <Text className="text-base text-center text-gray-600">Caloocan</Text>
-
-          <Text className="text-base text-center text-gray-600"></Text>
-        </XStack>
-        {/* Bio */}
-        <View className="justify-center items-center">
-          <Text className="text-base"></Text>
-        </View>
+        <YStack className="justify-center items-center space-y-2 mb-4">
+          <Text className="text-base">Milagross, Masbate, Mandaon</Text>
+          <Text className="text-base">09482004868</Text>
+        </YStack>
 
         {children}
-
-        {/* Attributes */}
-        <XStack className="gap-2 flex flex-wrap">
-          <View className="px-4 py-1 border border-gray-300 rounded-full">
-            <Text>Male</Text>
-          </View>
-
-          <View className="px-4 py-1 border border-gray-300 rounded-full">
-            <Text>Male</Text>
-          </View>
-
-          <View className="px-4 py-1 border border-gray-300 rounded-full">
-            <Text>Male</Text>
-          </View>
-
-          <View className="px-4 py-1 border border-gray-300 rounded-full">
-            <Text>Male</Text>
-          </View>
-
-          <View className="px-4 py-1 border border-gray-300 rounded-full">
-            <Text>Male</Text>
-          </View>
-
-          <View className="px-4 py-1 border border-gray-300 rounded-full">
-            <Text>Male</Text>
-          </View>
-        </XStack>
       </YStack>
     </View>
   );

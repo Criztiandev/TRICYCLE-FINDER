@@ -42,6 +42,7 @@ Routes(app);
 io.on("connection", (socket) => {
   // Join the conversation
   socket.on("conversation-join", (conversationID) => {
+    console.log(conversationID);
     socket.join(conversationID);
   });
 

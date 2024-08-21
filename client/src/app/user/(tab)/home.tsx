@@ -3,12 +3,12 @@ import ScreenBaseLayout from "@/layout/ScreenBaseLayout";
 import { FlashList } from "@shopify/flash-list";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
-import { CirclePlusIcon, MessageCircle, Search } from "lucide-react-native";
-import BottomSheet from "@/common/components/ui/BottomSheet";
-import { TouchableOpacity, View } from "react-native";
-import { useCallback, useMemo, useRef } from "react";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { MessageCircle } from "lucide-react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Input from "@/common/components/ui/Input";
+import Avatar from "@/common/components/ui/Avatar";
+import YStack from "@/common/components/stacks/YStack";
+import AccountBlob from "@/feature/account/component/AccountBlob";
 
 const RootScreen = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const RootScreen = () => {
     <>
       <HomeScreenHeader />
       <ScreenBaseLayout>
-        <TouchableOpacity className="w-full ">
+        <TouchableOpacity className="w-full px-4">
           <Input
             placeholder="Whats is in your mind ?"
             className="rounded-full px-3"
@@ -30,7 +30,15 @@ const RootScreen = () => {
         <FlashList
           data={[{}]}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => <View></View>}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() =>
+                router.navigate(`/account/details/66c4dbeaea8330619107f99f`)
+              }
+            >
+              <AccountBlob {...item} />
+            </TouchableOpacity>
+          )}
           estimatedItemSize={100}
         />
       </ScreenBaseLayout>
@@ -47,19 +55,6 @@ export default RootScreen;
 
 const HomeScreenHeader = () => {
   const router = useRouter();
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
-
-  // Memoize the snapPoints
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
-
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetRef.current?.present();
-  }, []);
-
-  const handleNavigate = (path: string) => {
-    bottomSheetRef.current?.close();
-    router.push(path as Href<String>);
-  };
 
   return (
     <>
@@ -67,15 +62,6 @@ const HomeScreenHeader = () => {
         options={{
           headerRight: () => (
             <XStack>
-              <Button
-                variant="ghost"
-                size="icon"
-                onPress={() =>
-                  router.navigate("/account/search" as Href<string>)
-                }
-              >
-                <Search color="black" />
-              </Button>
               {/* Message Button */}
               <Button
                 variant="ghost"
@@ -86,35 +72,10 @@ const HomeScreenHeader = () => {
               >
                 <MessageCircle color="black" />
               </Button>
-
-              {/* Create Post Modal */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onPress={handlePresentModalPress}
-              >
-                <CirclePlusIcon color="black" />
-              </Button>
             </XStack>
           ),
         }}
       />
-
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={snapPoints}
-        className="p-4 space-y-2 justify-center"
-      >
-        <View className="space-y-2 my-4 w-full">
-          <Button onPress={() => handleNavigate("/user/post/create")}>
-            Post
-          </Button>
-          <Button onPress={() => handleNavigate("/user/activity/create")}>
-            Activity
-          </Button>
-        </View>
-      </BottomSheet>
     </>
   );
 };

@@ -12,7 +12,6 @@ import { ArrowLeft } from "lucide-react-native";
 const RootScreen: React.FC = () => {
   const { id: initialRecipientID } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuth();
-  const router = useRouter();
 
   const { query: conversationQuery, messages } =
     useConversation(initialRecipientID);

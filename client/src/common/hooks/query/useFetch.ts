@@ -31,7 +31,7 @@ const useFetch = <TData = unknown, TError = AxiosError>(
         const data = await options.queryFn(context);
         return data;
       } catch (error) {
-        console.log(error);
+        console.log(JSON.stringify(error, null, 2));
         if (error instanceof AxiosError && error.response?.status === 401) {
           handleLogout();
         }

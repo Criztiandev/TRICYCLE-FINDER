@@ -23,7 +23,7 @@ const AccountDetails: FC<Props> = ({ _id, status, ...props }) => {
   return (
     <ProfileDetails {...props}>
       <XStack className="w-full space-x-4">
-        <Button className="flex-1">{getStatus(status as string)}</Button>
+        <Button className="flex-1">Book</Button>
 
         <Button className="flex-1" variant="outlined" onPress={handleMessage}>
           <View className="flex-1 flex-row justify-center items-center space-x-2">
@@ -37,9 +37,3 @@ const AccountDetails: FC<Props> = ({ _id, status, ...props }) => {
 };
 
 export default AccountDetails;
-
-const getStatus = (status: string) => {
-  if (status === "pending") return "Cancel Request";
-  if (status === "friend") return "Unfriend";
-  return "Add Friend";
-};

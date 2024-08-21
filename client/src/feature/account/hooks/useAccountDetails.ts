@@ -5,7 +5,7 @@ const useAccountDetails = (id?: string) => {
   return useFetch({
     queryKey: [`account-details-${id}`],
     queryFn: async () => {
-      const { data } = await ProtectedAxios.get(`/account/${id}`);
+      const { data } = await ProtectedAxios.get(`/account/details/${id}`);
       const { payload } = data;
       return payload;
     },

@@ -11,10 +11,13 @@ class AuthService {
 
   public registerUser = async (payload: IAccount) => {
     const { email, password } = payload;
+    let status = 200;
 
     // check if user exist
     const existingUser = await this.accountService.isAccountExist({ email });
-    if (existingUser) throw new Error("User is already exist");
+    if (existingUser) {
+      throw new Error("User is already exist");
+    }
 
     const hashedPassword = await EncryptionUtils.hashPassword(password);
 
@@ -33,7 +36,7 @@ class AuthService {
       "password"
     );
 
-    if (!existingUser) throw new Error("User doest exist");
+    if (!existingUser) throw new Error("Account doe'st exist");
 
     const isPasswordCorrect = await EncryptionUtils.comparePassword(
       password,
@@ -52,6 +55,12 @@ class AuthService {
     const refreshToken = tokenUtils.generateToken<any>(
       preparedPayload,
       process.env.REFRESH_TOKEN_EXPIRATION || "7d"
+    );
+
+    // update the status of the account
+    await this.accountService.updateAccountStatus(
+      existingUser._id as unknown as string,
+      "active"
     );
 
     return {

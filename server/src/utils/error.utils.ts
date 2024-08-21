@@ -12,7 +12,7 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let statusCode = res.statusCode === 200 ? 400 : res.statusCode;
   let message = err.message;
 
   // If Mongoose not found error, set to 404 and change message

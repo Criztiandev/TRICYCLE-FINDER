@@ -12,7 +12,7 @@ interface Props {
 }
 
 const ErrorScreen: FC<Props> = ({ error }) => {
-  // console.log(error);
+  console.log(error);
   return (
     <View className="flex-1 justify-center items-center">
       <Text>Error...</Text>

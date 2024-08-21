@@ -38,14 +38,6 @@ const AccountHeader = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                onPress={() => router.navigate("/user/friend/list")}
-              >
-                <Users color="black" />
-              </Button>
-
-              <Button
-                variant="ghost"
-                size="icon"
                 onPress={() => router.navigate("/account/settings")}
               >
                 <Settings color="black" />

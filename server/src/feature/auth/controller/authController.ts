@@ -22,6 +22,7 @@ class AuthController {
   public login = expressAsyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
       const { email, password } = req.body;
+
       const result = await this.service.loginUser(email, password);
 
       res.status(200).json({

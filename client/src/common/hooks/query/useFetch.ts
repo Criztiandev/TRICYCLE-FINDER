@@ -8,6 +8,8 @@ import { AxiosError } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useLogout from "@/feature/account/hooks/useLogout";
 import useScreenFocus from "../utils/useScreenFocus";
+import Toast from "react-native-toast-message";
+import { useRouter } from "expo-router";
 
 type CustomQueryFunction<TData> = (
   context: QueryFunctionContext
@@ -21,6 +23,7 @@ interface CustomUseQueryOptions<TData, TError>
 const useFetch = <TData = unknown, TError = AxiosError>(
   options: CustomUseQueryOptions<TData, TError>
 ) => {
+  const router = useRouter();
   const { isFocused } = useScreenFocus();
   const { handleLogout } = useLogout();
 
@@ -31,10 +34,10 @@ const useFetch = <TData = unknown, TError = AxiosError>(
         const data = await options.queryFn(context);
         return data;
       } catch (error) {
-        console.log(JSON.stringify(error, null, 2));
         if (error instanceof AxiosError && error.response?.status === 401) {
           handleLogout();
         }
+
         throw error;
       }
     },

@@ -51,6 +51,7 @@ function useMutate<TData, TVariables>({
       if (error instanceof AxiosError && error.response) {
         const { error: errorMessage } = error.response.data as any;
 
+        console.log(errorMessage);
         Toast.show({
           type: "error",
           text1: errorMessage || "Something went wrong",

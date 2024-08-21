@@ -9,6 +9,20 @@ class AccountRepository {
     this.model = accountModel;
   }
 
+  public fetchAllAccount = async () => {
+    return this.model.find({}).lean();
+  };
+
+  public fetchAllAccountByHits = async (
+    hits: FilterQuery<IAccount>,
+    select?: string
+  ) => {
+    return this.model
+      .find(hits)
+      .lean()
+      .select(select || "");
+  };
+
   public fetchAccountById = async (id: ObjectId, select?: string) => {
     return this.model
       .findById(id)
@@ -28,6 +42,16 @@ class AccountRepository {
 
   public create = async (payload: IAccount) => {
     return this.model.create(payload);
+  };
+
+  public updateByHits = async (
+    hits: FilterQuery<IAccount>,
+    payload: Partial<IAccount>
+  ) => {
+    return this.model
+      .updateOne(hits, payload, { new: true })
+      .lean()
+      .select("_id");
   };
 }
 

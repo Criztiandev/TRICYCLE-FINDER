@@ -4,17 +4,20 @@ import { FlashList } from "@shopify/flash-list";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
 import { MessageCircle } from "lucide-react-native";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import Input from "@/common/components/ui/Input";
-import Avatar from "@/common/components/ui/Avatar";
-import YStack from "@/common/components/stacks/YStack";
 import AccountBlob from "@/feature/account/component/AccountBlob";
+import useRiderList from "@/feature/rider/hooks/useRiderList";
+import LoadingScreen from "@/layout/screen/LoadingScreen";
+import ErrorScreen from "@/layout/screen/ErrorScreen";
+import { IAccount } from "@/feature/account/interface/account.interface";
 
 const RootScreen = () => {
+  const { data, isLoading, isError, error } = useRiderList();
   const router = useRouter();
 
-  // if (isLoading) return <LoadingScreen />;
-  // if (isError) return <ErrorScreen error={error} />;
+  if (isLoading) return <LoadingScreen />;
+  if (isError) return <ErrorScreen error={error} />;
 
   return (
     <>
@@ -28,13 +31,11 @@ const RootScreen = () => {
           />
         </TouchableOpacity>
         <FlashList
-          data={[{}]}
+          data={data}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
+          renderItem={({ item }: { item: IAccount }) => (
             <TouchableOpacity
-              onPress={() =>
-                router.navigate(`/account/details/66c4dbeaea8330619107f99f`)
-              }
+              onPress={() => router.navigate(`/account/details/${item._id}`)}
             >
               <AccountBlob {...item} />
             </TouchableOpacity>

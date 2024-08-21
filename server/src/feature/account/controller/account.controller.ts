@@ -7,11 +7,15 @@ class AccountController {
   constructor() {
     this.service = new AccountService();
   }
+
   profileDetails = expressAsyncHandler(async (req: Request, res: Response) => {
     const { UID } = req.user;
 
     const credentials = await this.service.getAccountCredentials({ _id: UID });
-    if (!credentials) throw new Error("Account doesnt exist");
+    if (!credentials) {
+      res.status(404);
+      throw new Error("Account doesnt exist");
+    }
 
     res.status(200).json({
       payload: credentials,
@@ -23,7 +27,10 @@ class AccountController {
     const { id: UID } = req.params;
 
     const credentials = await this.service.getAccountCredentials({ _id: UID });
-    if (!credentials) throw new Error("Account doesnt exist");
+    if (!credentials) {
+      res.status(404);
+      throw new Error("Account doesnt exist");
+    }
 
     res.status(200).json({
       payload: credentials,
@@ -32,7 +39,9 @@ class AccountController {
   });
 
   logout = expressAsyncHandler(async (req: Request, res: Response) => {
-    const { id: UID } = req.params;
+    const { id: UID } = req.user;
+
+    await this.service.updateAccountStatus(UID, "inactive");
 
     res.status(200).json({
       payload: UID,

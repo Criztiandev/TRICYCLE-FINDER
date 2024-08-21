@@ -9,10 +9,10 @@ const { protectedRoute } = protectedMiddleware;
 
 const Routes = (app: Express) => {
   app.use("/api", authRoutes);
-  app.use("/api", accountRoutes);
 
   // Private routes
   app.use("/api/", [protectedRoute], conversationRoutes);
+  app.use("/api", [protectedRoute], accountRoutes);
 };
 
 export default Routes;

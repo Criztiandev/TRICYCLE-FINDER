@@ -11,19 +11,23 @@ import {
   View,
 } from "react-native";
 
-interface Props extends Omit<BottomSheetModalProps, "children"> {
+// Defining the interface for the props
+interface Props extends Omit<BottomSheetModalProps, "snapPoints"> {
   className?: string;
   children: ReactNode;
+  snapPoints?: string[];
 }
 
+// Creating the BottomSheet component
 const BottomSheet = forwardRef<BottomSheetModal, Props>(
   ({ onChange, className, children, snapPoints = ["50%"], ...rest }, ref) => {
+    // Callback for rendering the backdrop
     const renderBackdrop = useCallback(
       (props: any) => (
         <BottomSheetBackdrop
+          {...props}
           appearsOnIndex={0}
           disappearsOnIndex={-1}
-          {...props}
         />
       ),
       []
@@ -32,14 +36,19 @@ const BottomSheet = forwardRef<BottomSheetModal, Props>(
     return (
       <BottomSheetModal
         ref={ref}
-        index={0}
         snapPoints={snapPoints}
-        onChange={onChange}
-        enablePanDownToClose
         backdropComponent={renderBackdrop}
+        onChange={onChange}
         {...rest}
       >
-        <View style={{ flex: 1 }}>{children}</View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <SafeAreaView style={{ flex: 1 }}>
+            <View style={{ flex: 1, ...rest }}>{children}</View>
+          </SafeAreaView>
+        </KeyboardAvoidingView>
       </BottomSheetModal>
     );
   }

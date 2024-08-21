@@ -1,5 +1,3 @@
-import { ObjectId } from "mongoose";
-
 // BookingRequestInterface.ts
 export interface IBookingRequest {
   _id?: string;
@@ -12,12 +10,10 @@ export interface IBookingRequest {
 // BookingInterface.ts
 export interface IBooking {
   _id?: string;
-  bookingRequestID: string | ObjectId;
+  bookingRequestID: string;
   pickupLocation: string;
   dropoffLocation: string;
-}
-
-export interface IBookingRequestBody
-  extends Pick<IBooking, "pickupLocation" | "dropoffLocation"> {
-  riderID: string;
+  pickupTime: Date;
+  distance: number;
+  fare: number;
 }

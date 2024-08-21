@@ -48,12 +48,6 @@ class AccountService {
   };
 
   /**
-   * Create the user
-   * @param payload
-   * @returns
-   */
-
-  /**
    *
    * @param ownerID
    * @returns

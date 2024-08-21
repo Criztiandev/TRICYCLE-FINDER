@@ -3,6 +3,11 @@ import expressAsyncHandler from "express-async-handler";
 import AccountService from "../../account/services/account.service";
 import BookingService from "../service/booking.service";
 import BookingRequestService from "../service/booking-request.service";
+import {
+  IBooking,
+  IBookingRequest,
+  IBookingRequestBody,
+} from "../booking.interface";
 
 class BookingRequest {
   private accountService: AccountService;
@@ -132,53 +137,60 @@ class BookingRequest {
     }
   );
 
-  public cancelBookingRequest = expressAsyncHandler(
+  public createBooking = expressAsyncHandler(
     async (req: Request, res: Response) => {
-      const { id: bookingID } = req.params;
+      const { riderID, dropoffLocation, pickupLocation } =
+        req.body as IBookingRequestBody;
       const { UID: selfID } = req.user;
-      await this.validateAccount(selfID);
 
-      // Get all the sent booking requests for the user
-      const bookingRequest =
-        await this.bookingRequestService.getBookingRequestDetails(
-          selfID,
-          bookingID
-        );
+      // Check if the target account exists
 
-      if (!bookingRequest) throw new Error("Booking request doest exist");
+      await this.validateAccount(riderID);
 
-      const acceptRequest = await this.bookingRequestService.cancel(
-        selfID,
-        bookingID
-      );
+      // create booking and then the request
 
-      if (!acceptRequest)
-        throw new Error("Something went wrong, Please try again later");
+      const requestResult = await this.bookingRequestService.create({
+        senderID: selfID,
+        recipientID: riderID,
+      });
+
+      const bookingResult = await this.bookingService.create({
+        bookingRequestID: requestResult._id as any,
+        dropoffLocation,
+        pickupLocation,
+      });
+
+      if (!bookingResult) throw new Error("Booking Failed");
 
       res.status(200).json({
-        payload: bookingRequest,
-        message: "Fetched successfully",
+        payload: requestResult?._id,
+        message: "Created successfully",
       });
     }
   );
 
-  public createBooking = expressAsyncHandler(
+  public cancelBookingRequest = expressAsyncHandler(
     async (req: Request, res: Response) => {
-      const { id: targetID } = req.params;
+      const { id: hitID } = req.params;
       const { UID: selfID } = req.user;
+      await this.validateAccount(selfID);
 
-      // Check if the target account exists
-      await this.validateAccount(targetID);
+      const cancelRequest = await this.bookingRequestService.cancel(
+        selfID,
+        hitID
+      );
 
-      // Create a new booking request
-      const credentials = await this.bookingRequestService.create({
-        senderID: selfID,
-        recipientID: targetID,
-      });
+      if (!cancelRequest)
+        throw new Error("Something went wrong, Please try again later");
+
+      const bookingResult = await this.bookingService.delete(
+        cancelRequest?._id as any
+      );
+      if (!bookingResult) throw new Error("Deletion Failed");
 
       res.status(200).json({
-        payload: credentials,
-        message: "Created successfully",
+        payload: hitID,
+        message: "Deleted successfully",
       });
     }
   );

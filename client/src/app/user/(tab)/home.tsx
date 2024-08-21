@@ -7,10 +7,10 @@ import { MessageCircle } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 import Input from "@/common/components/ui/Input";
 import AccountBlob from "@/feature/account/component/AccountBlob";
-import useRiderList from "@/feature/rider/hooks/useRiderList";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import { IAccount } from "@/feature/account/interface/account.interface";
+import useRiderList from "@/feature/account/hooks/useRiderList";
 
 const RootScreen = () => {
   const { data, isLoading, isError, error } = useRiderList();

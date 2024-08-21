@@ -10,9 +10,6 @@ const bookingSchema = new mongoose.Schema(
     },
     pickupLocation: { type: String, required: true },
     dropoffLocation: { type: String, required: true },
-    pickupTime: { type: Date, required: true },
-    distance: { type: Number, required: true },
-    fare: { type: Number, required: true },
   },
   {
     timestamps: true,

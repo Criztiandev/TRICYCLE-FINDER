@@ -9,6 +9,7 @@ import { createNotifications } from "react-native-notificated";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import AuthProvider from "@/providers/AuthProvider";
 import Toast from "react-native-toast-message";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 const client = new QueryClient();
 
@@ -26,16 +27,18 @@ export default function RootLayout() {
       <ThemeProvider initialTheme={lightTheme}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <AuthProvider>
-            <NotificationsProvider>
-              <>
-                <Stack screenOptions={{ headerShown: false }}>
-                  <Stack.Screen name="auth" />
-                  <Stack.Screen name="user" />
-                  <Stack.Screen name="account" />
-                </Stack>
-                <Toast />
-              </>
-            </NotificationsProvider>
+            <BottomSheetModalProvider>
+              <NotificationsProvider>
+                <>
+                  <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="auth" />
+                    <Stack.Screen name="user" />
+                    <Stack.Screen name="account" />
+                  </Stack>
+                  <Toast />
+                </>
+              </NotificationsProvider>
+            </BottomSheetModalProvider>
           </AuthProvider>
         </GestureHandlerRootView>
       </ThemeProvider>

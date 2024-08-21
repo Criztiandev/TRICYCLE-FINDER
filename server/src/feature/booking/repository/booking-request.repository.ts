@@ -73,6 +73,14 @@ class BookingRequestRepository {
 
     return updatedCredentials.acknowledged;
   };
+
+  public deleteRequestById = async (id: string) => {
+    const credentials = await this.model.findOneAndDelete<IBookingRequest>({
+      $or: [{ _id: id }, { senderID: id }, { recipientID: id }],
+    });
+    if (!credentials) throw new Error("Request deletion failed");
+    return credentials._id;
+  };
 }
 
 export default BookingRequestRepository;

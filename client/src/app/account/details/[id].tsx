@@ -9,7 +9,6 @@ import { ArrowLeft } from "lucide-react-native";
 import AccountDetails from "@/feature/account/component/AccountDetails";
 
 const RootScreen = () => {
-  const { user } = useAuth();
   const { id } = useLocalSearchParams();
   const { data, isLoading, isError, error } = useAccountDetails(id as string);
 

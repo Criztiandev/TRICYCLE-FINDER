@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Linking, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { GiftedChat } from "react-native-gifted-chat";
@@ -7,15 +7,15 @@ import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import { useAuth } from "@/providers/AuthProvider";
 import useSendMessage from "@/feature/conversation/hooks/useSendMessage";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, PhoneCall } from "lucide-react-native";
+import Button from "@/common/components/ui/Button";
 
 const RootScreen: React.FC = () => {
-  const { id: initialRecipientID } = useLocalSearchParams<{ id: string }>();
+  const { id: UID } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuth();
 
-  const { query: conversationQuery, messages } =
-    useConversation(initialRecipientID);
-  const { handleSendMessage } = useSendMessage(initialRecipientID);
+  const { query: conversationQuery, messages } = useConversation(UID);
+  const { handleSendMessage } = useSendMessage(UID);
 
   const { isLoading, isError, error, data } = conversationQuery;
 
@@ -23,20 +23,26 @@ const RootScreen: React.FC = () => {
   if (isError) return <ErrorScreen />;
 
   const recipient = data?.recipient || {
-    _id: initialRecipientID,
+    _id: UID,
     name: "Recipient",
+    phoneNumber: data?.recipient.phoneNumber,
   };
+
+  console.log(JSON.stringify(data, null, 2));
 
   return (
     <>
-      <ConversationHeader recipientName={recipient.name} />
+      <ConversationHeader
+        recipientNumber={recipient.phoneNumber || "09488283838"}
+        recipientName={recipient.name}
+      />
       <View style={{ flex: 1 }}>
         <GiftedChat
           messages={messages}
           onSend={handleSendMessage}
           user={{
             _id: user?.UID || "",
-            name: user?.name || "",
+            name: (user as unknown as Record<string, string>)?.name || "",
           }}
           showAvatarForEveryMessage={true}
           renderAvatarOnTop={true}
@@ -48,9 +54,10 @@ const RootScreen: React.FC = () => {
 
 export default RootScreen;
 
-const ConversationHeader: React.FC<{ recipientName: string }> = ({
-  recipientName,
-}) => {
+const ConversationHeader: React.FC<{
+  recipientName: string;
+  recipientNumber: string;
+}> = ({ recipientName, recipientNumber }) => {
   const router = useRouter();
   return (
     <Stack.Screen
@@ -60,6 +67,17 @@ const ConversationHeader: React.FC<{ recipientName: string }> = ({
           <TouchableOpacity onPress={() => router.back()} className="p-2 mr-4">
             <ArrowLeft color="black" />
           </TouchableOpacity>
+        ),
+
+        headerRight: () => (
+          <Button
+            variant="ghost"
+            onPress={() =>
+              Linking.openURL(`tel:${recipientNumber || "094828828383"} `)
+            }
+          >
+            <PhoneCall color="black" />
+          </Button>
         ),
       }}
     />

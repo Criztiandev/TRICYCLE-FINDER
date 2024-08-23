@@ -40,7 +40,7 @@ class ConversationService {
           { participants: { $all: [conversationID] } },
         ],
       },
-      { path: "participants", select: "firstName lastName" }
+      { path: "participants", select: "firstName lastName phoneNumber" }
     );
   };
 
@@ -79,12 +79,21 @@ class ConversationService {
       recipient: {
         _id: recipient._id,
         name: recipientFullName,
+        phoneNumber: (recipient as any)?.phoneNumber,
       },
       conversationID: conversation?._id,
       messages: formattedMessages.reverse(),
       participants: [
-        { _id: firstPerson._id, name: firstPersonFullName },
-        { _id: secondPerson._id, name: secondPersonFullName },
+        {
+          _id: firstPerson._id,
+          name: firstPersonFullName,
+          phoNumber: (firstPerson as any)?.phoneNumber,
+        },
+        {
+          _id: secondPerson._id,
+          name: secondPersonFullName,
+          phoNumber: (secondPerson as any)?.phoneNumber,
+        },
       ],
     };
   };

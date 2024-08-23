@@ -9,6 +9,7 @@ interface ConversationData {
   recipient: {
     _id: string;
     name: string;
+    phoneNumber: string;
   };
   conversationID: string;
   messages: IMessage[];

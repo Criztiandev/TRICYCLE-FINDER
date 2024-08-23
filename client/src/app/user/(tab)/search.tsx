@@ -1,42 +1,74 @@
 import { Href, Stack, useRouter } from "expo-router";
 import ScreenBaseLayout from "@/layout/ScreenBaseLayout";
-import { FlashList } from "@shopify/flash-list";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
 import { MessageCircle } from "lucide-react-native";
-import { TouchableOpacity, View } from "react-native";
-import Input from "@/common/components/ui/Input";
-import AccountBlob from "@/feature/account/component/AccountBlob";
+import { View } from "react-native";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
-import { IAccount } from "@/feature/account/interface/account.interface";
 import useRiderList from "@/feature/rider/hooks/useRiderList";
+import { useRef, useState } from "react";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomSheet from "@/common/components/ui/BottomSheet";
+import useRiderDetails from "@/feature/rider/hooks/useRiderDetails";
+import ProfileDetails from "@/feature/account/component/ProfileDetails";
 
 const RootScreen = () => {
-  const { data, isLoading, isError, error } = useRiderList();
+  const [selectedRider, setSelectedRider] = useState<Record<
+    string,
+    string
+  > | null>(null);
   const router = useRouter();
+  const { data, isLoading, isError, error } = useRiderList();
+  const bottomSheetRef = useRef<BottomSheetModal | null>(null);
+
+  const toggleRatingSheet = () => {
+    bottomSheetRef.current?.present();
+  };
 
   if (isLoading) return <LoadingScreen />;
   if (isError) return <ErrorScreen error={error} />;
+
+  const handleRandomSearch = () => {
+    if (data && data.length > 0) {
+      const randomIndex = Math.floor(Math.random() * data.length);
+      const randomRider = data[randomIndex] as Record<string, string>;
+
+      toggleRatingSheet();
+      setSelectedRider(randomRider);
+    }
+  };
+
+  const handleNavigate = () => {
+    router.push(`/booking/chosen-rider/${selectedRider?._id}`);
+    bottomSheetRef.current?.close();
+  };
 
   return (
     <>
       <HomeScreenHeader />
       <ScreenBaseLayout className="flex-1">
         <View className="flex justify-center items-center flex-1">
-          <Button>Search Rider</Button>
+          <Button onPress={handleRandomSearch}>Search Rider</Button>
         </View>
       </ScreenBaseLayout>
+
+      <BottomSheet ref={bottomSheetRef} snapPoints={["90%"]}>
+        <View className="flex justify-center items-center flex-1">
+          <RiderDetails
+            onNavigate={handleNavigate}
+            id={
+              (selectedRider as unknown as Record<string, string>)
+                ?._id as string
+            }
+          />
+        </View>
+      </BottomSheet>
     </>
   );
 };
 
 export default RootScreen;
-
-/**
- * Home Tab Header
- * @purpose - to display the Title, Message and Create Post
- */
 
 const HomeScreenHeader = () => {
   const router = useRouter();
@@ -62,5 +94,27 @@ const HomeScreenHeader = () => {
         }}
       />
     </>
+  );
+};
+
+const RiderDetails = ({
+  id,
+  onNavigate,
+}: {
+  id: string;
+  onNavigate: () => void;
+}) => {
+  const router = useRouter();
+  const { data, isLoading, isError, error } = useRiderDetails(id as string);
+
+  if (isLoading) return <LoadingScreen />;
+  if (isError) return <ErrorScreen error={error} />;
+
+  return (
+    <ProfileDetails {...data}>
+      <Button onPress={onNavigate} className="w-full">
+        Select Rider
+      </Button>
+    </ProfileDetails>
   );
 };

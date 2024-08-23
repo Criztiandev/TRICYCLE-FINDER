@@ -109,24 +109,30 @@ class AccountService {
 
     switch (status) {
       case "active":
-        credentials = await this.repository.getAllByHits({
-          $and: [
-            { _id: { $ne: ownerID } },
-            { status: "active" },
-            { role: "rider" },
-          ],
-        });
+        credentials = await this.repository.getAllByHits(
+          {
+            $and: [
+              { _id: { $ne: ownerID } },
+              { status: "active" },
+              { role: "rider" },
+            ],
+          },
+          "-password"
+        );
 
         break;
 
       case "inactive":
-        credentials = await this.repository.getAllByHits({
-          $and: [
-            { _id: { $ne: ownerID } },
-            { status: "inactive" },
-            { role: "rider" },
-          ],
-        });
+        credentials = await this.repository.getAllByHits(
+          {
+            $and: [
+              { _id: { $ne: ownerID } },
+              { status: "inactive" },
+              { role: "rider" },
+            ],
+          },
+          "-password"
+        );
         break;
 
       default:

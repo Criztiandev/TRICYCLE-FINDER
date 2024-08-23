@@ -42,6 +42,9 @@ const RootScreen = () => {
   const { id } = useLocalSearchParams();
   const { data, isLoading, isError, error } = useRiderDetails(id as string);
 
+  /**
+   * This effect lets you handle socket IO in realtime and get triggered when there is an update in the server
+   */
   useEffect(() => {
     const socket = io(SOCKET_URL);
 
@@ -52,6 +55,9 @@ const RootScreen = () => {
     });
   }, [data]);
 
+  /**
+   * This effect handle the state of the status so It could redirect to the proper screen
+   */
   useEffect(() => {
     if (data?.status === "accepted") {
       Toast.show({
@@ -103,7 +109,7 @@ const RootScreen = () => {
 export default RootScreen;
 
 /**
- *
+ * This component lets you customize the header section of the screen
  * @returns Header
  */
 const DetailsHeader: React.FC = () => {
@@ -123,7 +129,7 @@ const DetailsHeader: React.FC = () => {
 };
 
 /**
- *
+ * This components lets you hanle Message button that lets you message the rider with your account
  * @param param - Props that you want ti send a message
  * @returns
  */
@@ -144,7 +150,7 @@ const MessageButton = ({ riderID }: MessageButtonProps) => {
 };
 
 /**
- *
+ * This componnet is a button that lets you book to the rider that you selected
  * @param param - Props that accept the rider id and the status of the booking
  * @returns
  */

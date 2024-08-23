@@ -1,3 +1,4 @@
+import { IBooking } from "../../booking/booking.interface";
 import AccountService from "./account.service";
 
 class RiderService {
@@ -10,11 +11,8 @@ class RiderService {
     return await this.accountService.getAllAccount();
   };
 
-  getAllRiderActive = async (ownerID: string) => {
-    return await this.accountService.getAllActive(ownerID, "rider");
-  };
-  getAllRiderInactive = async (ownerID: string) => {
-    return await this.accountService.getAllInactive(ownerID, "rider");
+  getAllRiderByStatus = async (ownerID: string, status: IBooking["status"]) => {
+    return await this.accountService.getAllByStatus(ownerID, status);
   };
 
   getRiderById = async () => {};

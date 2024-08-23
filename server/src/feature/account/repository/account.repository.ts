@@ -13,7 +13,7 @@ class AccountRepository {
     return this.model.find({}).lean();
   };
 
-  public fetchAllAccountByHits = async (
+  public getAllByHits = async (
     hits: FilterQuery<IAccount>,
     select?: string
   ) => {

@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { Href, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
-import { ArrowLeft, MessageSquare } from "lucide-react-native";
+import { ArrowLeft, MessageSquare, Star } from "lucide-react-native";
 import ProfileDetails from "@/feature/account/component/ProfileDetails";
 import XStack from "@/common/components/stacks/XStack";
 import { IAccount } from "@/feature/account/interface/account.interface";
@@ -17,17 +17,12 @@ import BottomSheet from "@/common/components/ui/BottomSheet";
 import useBookingRequest from "@/feature/booking/hooks/useBookingRequest";
 import useRiderDetails from "@/feature/rider/hooks/useRiderDetails";
 import { io } from "socket.io-client";
+import useRateRider from "@/feature/rider/hooks/useRiderRating";
+import SelectField from "@/common/components/form/SelectField";
 
 interface Props extends IAccount {
   status?: string;
   bookingStatus?: string;
-}
-
-interface BookingButtonProps {
-  riderID: string;
-  bookingID: string;
-  status?: string;
-  availability?: string;
 }
 
 interface MessageButtonProps {
@@ -41,14 +36,12 @@ const RootScreen = () => {
   const { id } = useLocalSearchParams();
   const { data, isLoading, isError, error } = useRiderDetails(id as string);
 
-  console.log(id);
-
   useEffect(() => {
     const socket = io(SOCKET_URL);
 
     socket.on("booking-done", (acceptedID) => {
       if (acceptedID === data?._id) {
-        router.replace(`/rating/${id}` as Href<string>);
+        router.replace(`booking/rating/${data?._id}` as Href<string>);
       }
     });
   }, [data]);
@@ -64,12 +57,7 @@ const RootScreen = () => {
       <View className="bg-white flex-1 p-4 justify-center">
         <ProfileDetails {...data}>
           <XStack className="w-full space-x-4">
-            <BookingButton
-              riderID={id as string}
-              bookingID={data?._id as string}
-              availability={data?.availability}
-              status={data?.status}
-            />
+            <RatingButton />
 
             <MessageButton riderID={id as string} />
           </XStack>
@@ -122,76 +110,47 @@ const MessageButton = ({ riderID }: MessageButtonProps) => {
  * @param param - Props that accept the rider id and the status of the booking
  * @returns
  */
-const BookingButton = ({
-  riderID,
-  availability,
-  bookingID,
-  status,
-}: BookingButtonProps) => {
+const RatingButton = ({ riderID }: { riderID: string }) => {
   const bottomSheetRef = useRef<BottomSheetModal | null>(null);
-  const { requestMutation, cancelMutation } = useBookingRequest();
+  const { form, mutation } = useRateRider(riderID);
 
-  const { form, isPending, onRequest, isSuccess } = requestMutation(bookingID);
-  const { onCancel } = cancelMutation(bookingID, riderID);
-
-  const toggleBottomSheet = () => {
-    if (bottomSheetRef.current) {
-      bottomSheetRef.current.present();
-    }
+  const toggleRatingSheet = () => {
+    bottomSheetRef.current?.present();
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      bottomSheetRef.current?.close();
-    }
-  }, [isSuccess]);
-
-  const isDisabled = availability !== "available";
-  const buttonText = getButtonText(
-    availability || "unavailable",
-    status || "N/A"
-  );
-
-  const handlePress = () => {
-    if (buttonText === "Cancel Book") {
-      onCancel();
-    } else {
-      toggleBottomSheet();
-    }
+  const onRate = () => {
+    mutation.mutate(form.getValues());
   };
 
   return (
     <>
-      <Button
-        className="flex-1 mr-2"
-        onPress={handlePress}
-        disabled={isDisabled}
-      >
-        Rate
+      <Button className="flex-1" onPress={() => toggleRatingSheet()}>
+        <View className="flex-row space-x-2 justify-center items-center">
+          <Star fill="#f1c40f" size={32} />
+          <Text className="text-white text-center text-lg ">Rate</Text>
+        </View>
       </Button>
 
-      <BottomSheet ref={bottomSheetRef} snapPoints={["50%"]}>
+      <BottomSheet ref={bottomSheetRef} snapPoints={["30%"]}>
         <View className="p-4">
           <FormProvider {...form}>
             <YStack className="space-y-4">
-              <Text className="text-2xl font-bold text-center ">Transport</Text>
-              <View>
-                <InputField
-                  label="Pickup Location"
-                  name="pickupLocation"
-                  placeholder="Enter your Pickup Location"
-                />
-              </View>
-              <View>
-                <InputField
-                  label="Drop off Location"
-                  name="dropoffLocation"
-                  placeholder="Enter your Dropoff location"
-                />
-              </View>
+              <SelectField
+                label="Rating"
+                name="rating"
+                options={[
+                  { label: "Select Rating", value: "", disabled: true },
+                  { label: "5 Star", value: 5 },
+                  { label: "4 Star", value: 4 },
+                  { label: "3 Star", value: 3 },
+                  { label: "2 Star", value: 2 },
+                  { label: "1 Star", value: 1 },
+                ]}
+              />
+
               <Button
-                disabled={isPending}
-                onPress={form.handleSubmit(onRequest)}
+                disabled={mutation.isPending}
+                onPress={form.handleSubmit(onRate)}
               >
                 Book
               </Button>
@@ -201,15 +160,4 @@ const BookingButton = ({
       </BottomSheet>
     </>
   );
-};
-
-const getButtonText = (availability: string, status: string): string => {
-  if (availability === "available") {
-    return status === "N/A"
-      ? "Book"
-      : status === "pending"
-      ? "Cancel Book"
-      : "Manage Booking";
-  }
-  return "Unavailable";
 };

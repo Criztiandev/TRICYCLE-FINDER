@@ -75,8 +75,24 @@ class BookingRequestRepository {
 
   // New
 
-  public deleteByHits = async (hits: FilterQuery<IBookingRequest>) => {
-    return this.model.deleteOne(hits).lean();
+  public getOneByHits = async (
+    hits: FilterQuery<IBookingRequest>,
+    select?: string
+  ) => {
+    return await this.model
+      .findOne(hits)
+      .lean()
+      .select(select || {});
+  };
+
+  public getAllByHits = async (
+    hits: FilterQuery<IBookingRequest>,
+    select?: string
+  ) => {
+    return this.model
+      .find(hits)
+      .lean()
+      .select(select || {});
   };
 
   public create = async (payload: IBookingRequest) => {
@@ -91,6 +107,10 @@ class BookingRequestRepository {
     return await this.model.findOneAndUpdate(hits, payload, {
       new: true,
     });
+  };
+
+  public deleteByHits = async (hits: FilterQuery<IBookingRequest>) => {
+    return await this.model.deleteOne(hits).lean();
   };
 }
 

@@ -29,21 +29,12 @@ class RiderController {
       const { UID } = req.user;
       const { status } = req.params;
 
-      let credentials: IAccount[];
+      const credentials = await this.accountService.getAllRiderByStatus(
+        UID,
+        status
+      );
 
-      switch (status) {
-        case "active":
-          credentials = await this.service.getAllRiderActive(UID);
-          break;
-
-        case "inactive":
-          credentials = await this.service.getAllRiderInactive(UID);
-          break;
-
-        default:
-          credentials = [];
-          break;
-      }
+      console.log(credentials);
 
       res.status(200).json({
         payload: credentials,

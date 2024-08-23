@@ -16,4 +16,8 @@
 20. Centralize the useQuert abd usemutation like useFetch and useMutate
 21. Fixed the Input todo for beng so dependent by instad of class, by make it style
 
+22. Text are is needed
+
+23. copy al the hooks here
+
 There is no badge component

@@ -4,7 +4,10 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 const useBottomSheet = () => {
   const currentRef = useRef<BottomSheetModal | null>(null);
-  const openSheet = () => {};
+  const openSheet = () => {
+    if (currentRef.current) {
+    }
+  };
   const closeSheet = () => {};
 
   return { currentRef, openSheet, closeSheet };

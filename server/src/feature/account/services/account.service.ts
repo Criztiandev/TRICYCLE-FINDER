@@ -28,7 +28,7 @@ class AccountService {
       query._id = { $ne: ownerID };
     }
 
-    return await this.repository.fetchAllAccountByHits(query);
+    return await this.repository.getAllByHits(query);
   };
 
   /**
@@ -66,10 +66,8 @@ class AccountService {
    * @param ownerID
    * @returns
    */
-  getAllActive = async (ownerID: string, role: IAccount["role"]) => {
-    console.log("Active");
-
-    return await this.repository.fetchAllAccountByHits(
+  getAllByStatus = async (ownerID: string, role: IAccount["role"]) => {
+    return await this.repository.getAllByHits(
       {
         $and: [{ _id: { $ne: ownerID } }, { role }, { status: "active" }],
       },
@@ -78,8 +76,7 @@ class AccountService {
   };
 
   getAllInactive = async (ownerID: string, role: IAccount["role"]) => {
-    console.log("Inactive");
-    return await this.repository.fetchAllAccountByHits({
+    return await this.repository.getAllByHits({
       $and: [{ _id: { $ne: ownerID } }, { role }, { status: "inactive" }],
     });
   };
@@ -101,6 +98,41 @@ class AccountService {
     );
 
     if (!credentials) throw new Error("Updated Failed");
+
+    return credentials;
+  };
+
+  // new
+
+  getAllRiderByStatus = async (ownerID: string, status: string) => {
+    let credentials: IAccount[];
+
+    switch (status) {
+      case "active":
+        credentials = await this.repository.getAllByHits({
+          $and: [
+            { _id: { $ne: ownerID } },
+            { status: "active" },
+            { role: "rider" },
+          ],
+        });
+
+        break;
+
+      case "inactive":
+        credentials = await this.repository.getAllByHits({
+          $and: [
+            { _id: { $ne: ownerID } },
+            { status: "inactive" },
+            { role: "rider" },
+          ],
+        });
+        break;
+
+      default:
+        credentials = [];
+        break;
+    }
 
     return credentials;
   };

@@ -4,6 +4,7 @@ import BookingService from "../service/booking.service";
 import AccountService from "../../account/services/account.service";
 import { IBooking } from "../booking.interface";
 import BookingRequestService from "../service/booking-request.service";
+import ratingModel from "../../account/model/rating.model";
 
 class BookingRiderController {
   private accountService: AccountService;
@@ -46,6 +47,44 @@ class BookingRiderController {
       });
     }
   );
+
+  public rate = expressAsyncHandler(async (req: Request, res: Response) => {
+    const { UID } = req.user;
+    const { id: riderID } = req.params;
+    const payload = req.body;
+
+    // Get the rider account
+    const credentials = await this.accountService.getDetails(riderID);
+    if (!credentials) throw new Error("Account does not exist");
+
+    // Check if the user has already rated twice today
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const ratingCount = await ratingModel.countDocuments({
+      accountID: UID,
+      createdAt: { $gte: today, $lt: tomorrow },
+    });
+
+    if (ratingCount >= 1) {
+      throw new Error("You have already rated today");
+    }
+
+    // Create the rating
+    const createRating = await ratingModel.create({
+      accountID: UID,
+      senderID: riderID,
+      ...payload,
+    });
+
+    if (!createRating) throw new Error("Create Rating Failed");
+
+    res.status(200).json({
+      payload: null,
+    });
+  });
 }
 
 export default new BookingRiderController();

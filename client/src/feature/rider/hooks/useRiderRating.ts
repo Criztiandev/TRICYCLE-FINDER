@@ -8,7 +8,8 @@ const useRateRider = (riderID: string) => {
   const form = useForm();
   const mutation = useMutate({
     mutationKey: [`rider-rate-${riderID}`],
-    mutationFn: async () => await ProtectedAxios.patch("/booking/rider/rate"),
+    mutationFn: async (value) =>
+      await ProtectedAxios.post(`/booking/rider/rate/${riderID}`, value),
 
     onSuccess: () => {
       Toast.show({

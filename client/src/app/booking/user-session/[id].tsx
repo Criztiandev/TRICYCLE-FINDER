@@ -57,7 +57,7 @@ const RootScreen = () => {
       <View className="bg-white flex-1 p-4 justify-center">
         <ProfileDetails {...data}>
           <XStack className="w-full space-x-4">
-            <RatingButton />
+            <RatingButton riderID={id as string} />
 
             <MessageButton riderID={id as string} />
           </XStack>
@@ -120,6 +120,7 @@ const RatingButton = ({ riderID }: { riderID: string }) => {
 
   const onRate = () => {
     mutation.mutate(form.getValues());
+    bottomSheetRef.current?.close();
   };
 
   return (

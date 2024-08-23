@@ -37,7 +37,7 @@ class BookingRepository {
     hits: FilterQuery<IBooking>,
     payload: IBooking["status"]
   ) => {
-    return this.model.updateOne(hits, payload, { new: true }).lean();
+    return this.model.findOneAndUpdate(hits, payload, { new: true }).lean();
   };
 }
 

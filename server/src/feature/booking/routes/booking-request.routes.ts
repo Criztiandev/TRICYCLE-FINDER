@@ -7,16 +7,6 @@ const router = express.Router();
 router.post("/create/:id", bookingRequestController.createBooking);
 router.patch("/cancel/:id", bookingRequestController.cancelBooking);
 router.patch("/accept/:id", bookingRequestController.acceptBooking);
-
-router.get("/:id", bookingController.getBookingDetailsByRequestID);
-router.patch(
-  "/request/done/:id",
-  bookingRequestController.completeBookingRequest
-);
-
-router.patch(
-  "/request/accept/:id",
-  bookingRequestController.acceptBookingRequest
-);
+router.patch("/done/:id", bookingRequestController.doneBooking);
 
 export default router;

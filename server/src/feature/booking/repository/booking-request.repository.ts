@@ -65,19 +65,6 @@ class BookingRequestRepository {
    * @returns ID of the successful created request
    */
 
-  public updateRequestById = async (
-    hits: FilterQuery<IBookingRequest>,
-    payload: Partial<IBookingRequest>
-  ) => {
-    const updatedCredentials = await this.model.updateOne(hits, payload, {
-      new: true,
-    });
-
-    if (!updatedCredentials) throw new Error("Update Failed");
-
-    return updatedCredentials.acknowledged;
-  };
-
   public deleteRequestById = async (id: string) => {
     const credentials = await this.model.findOneAndDelete<IBookingRequest>({
       $or: [{ _id: id }, { senderID: id }, { recipientID: id }],
@@ -95,6 +82,15 @@ class BookingRequestRepository {
   public create = async (payload: IBookingRequest) => {
     const credentials = await this.model.create(payload);
     return credentials?._id;
+  };
+
+  public updateByHits = async (
+    hits: FilterQuery<IBookingRequest>,
+    payload: Partial<IBookingRequest>
+  ) => {
+    return await this.model.findOneAndUpdate(hits, payload, {
+      new: true,
+    });
   };
 }
 

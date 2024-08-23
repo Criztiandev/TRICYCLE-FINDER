@@ -17,6 +17,7 @@ import BottomSheet from "@/common/components/ui/BottomSheet";
 import useBookingRequest from "@/feature/booking/hooks/useBookingRequest";
 import useRiderDetails from "@/feature/rider/hooks/useRiderDetails";
 import { io } from "socket.io-client";
+import Toast from "react-native-toast-message";
 
 interface Props extends IAccount {
   status?: string;
@@ -46,10 +47,32 @@ const RootScreen = () => {
 
     socket.on("booking-accepted", (acceptedID) => {
       if (acceptedID === data?._id) {
-        router.push("/booking/user-session" as Href<string>);
+        router.replace(`/booking/user-session/${id}` as Href<string>);
       }
     });
   }, [data]);
+
+  useEffect(() => {
+    if (data?.status === "accepted") {
+      Toast.show({
+        type: "info",
+        text1: `Welcome back ${data?.firstName || "User"} ${
+          data?.lastName || ""
+        }`,
+        text2: "Thank you for your patience",
+      });
+      router.replace(`/booking/user-session/${id}`);
+    }
+
+    if (data?.status === "done") {
+      Toast.show({
+        type: "info",
+        text1: "Booking is already done",
+        text2: "Thank you for using the app",
+      });
+      router.replace(`/`);
+    }
+  }, [data?.status]);
 
   if (isLoading) return <LoadingScreen />;
   if (isError) {

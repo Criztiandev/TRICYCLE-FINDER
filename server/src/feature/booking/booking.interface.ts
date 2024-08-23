@@ -6,7 +6,7 @@ export interface IBookingRequest {
   bookingID: any;
   riderID: string | ObjectId;
   recipientID: string | ObjectId;
-  status?: "pending" | "accepted" | "rejected " | "all";
+  status?: "pending" | "accepted" | "rejected " | "all" | "done";
   isDeleted?: boolean;
 }
 

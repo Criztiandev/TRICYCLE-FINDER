@@ -75,12 +75,6 @@ class BookingService {
   };
 
   done = async (ownerID: string, hits: string) => {
-    // delete the request
-    const deleteRequestResult = await this.bookingRequestService.deleteRequest(
-      hits
-    );
-    if (!deleteRequestResult) throw new Error("Deletion Failed failed");
-
     const completeResult = await this.complete(hits);
     if (!completeResult) throw new Error("Completion Failed");
 

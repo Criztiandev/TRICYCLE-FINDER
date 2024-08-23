@@ -122,18 +122,53 @@ class BookingRequestService {
     });
   };
 
-  accept = async (targetID: string, bookingID: ObjectId | string) => {
-    await this.bookingRequestRepository.updateRequestById(
+  accept = async (bookingID: string) => {
+    const updatedRequest = await this.bookingRequestRepository.updateByHits(
       {
-        $and: [{ recipientID: targetID }, { _id: bookingID }],
+        $and: [{ _id: bookingID }, { status: "pending" }],
       },
-      { status: "accepted", isDeleted: true }
+      {
+        status: "accepted",
+      }
     );
+
+    if (!updatedRequest) throw new Error("Updated failed, Already Accepted");
+
+    const updatedBooking = await this.bookingRepository.updateByHits(
+      {
+        $and: [{ _id: updatedRequest?.bookingID }, { status: "pending" }],
+      },
+      { status: "accepted" }
+    );
+
+    if (!updatedBooking) throw new Error("Updated failed, Already Accepted");
+
     return bookingID;
   };
 
-  deleteRequest = async (hits: string) => {
-    return this.bookingRequestRepository.deleteRequestById(hits);
+  done = async (bookingID: string) => {
+    const updatedRequest = await this.bookingRequestRepository.updateByHits(
+      {
+        $and: [{ _id: bookingID }, { status: "accepted" }],
+      },
+      {
+        status: "done",
+        isDeleted: true,
+      }
+    );
+
+    if (!updatedRequest) throw new Error("Updated failed, Already Done");
+
+    const updatedBooking = await this.bookingRepository.updateByHits(
+      {
+        $and: [{ _id: updatedRequest?.bookingID }, { status: "accepted" }],
+      },
+      { status: "done" }
+    );
+
+    if (!updatedBooking) throw new Error("Updated failed, Already Done");
+
+    return bookingID;
   };
 }
 

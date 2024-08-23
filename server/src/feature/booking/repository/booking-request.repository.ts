@@ -15,7 +15,7 @@ class BookingRequestRepository {
     return this.model
       .findOne(hits)
       .lean()
-      .select(select || {});
+      .select(select || "");
   };
 
   /**
@@ -64,12 +64,6 @@ class BookingRequestRepository {
    * @param payload Payload of the booking request
    * @returns ID of the successful created request
    */
-  public create = async (payload: any) => {
-    const credentials = await this.model.create(payload);
-
-    if (!credentials) throw new Error("Booking request failed");
-    return credentials?._id;
-  };
 
   public updateRequestById = async (
     hits: FilterQuery<IBookingRequest>,
@@ -90,6 +84,17 @@ class BookingRequestRepository {
     });
     if (!credentials) throw new Error("Request deletion failed");
     return credentials._id;
+  };
+
+  // New
+
+  public deleteByHits = async (hits: FilterQuery<IBookingRequest>) => {
+    return this.model.deleteOne(hits).lean();
+  };
+
+  public create = async (payload: IBookingRequest) => {
+    const credentials = await this.model.create(payload);
+    return credentials?._id;
   };
 }
 

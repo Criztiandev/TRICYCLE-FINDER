@@ -117,6 +117,26 @@ class BookingRequest {
     }
   );
 
+  public completeBookingRequest = expressAsyncHandler(
+    async (req: Request, res: Response) => {
+      const { id: hitID } = req.params;
+      const { UID: selfID } = req.user;
+      await this.validateAccount(selfID);
+
+      const completeResult = await this.bookingService.done(selfID, hitID);
+
+      if (!completeResult)
+        throw new Error("Something went wrong, Please try again later");
+
+      res.status(200).json({
+        payload: hitID,
+        message: "Deleted successfully",
+      });
+    }
+  );
+
+  // New
+
   public createBooking = expressAsyncHandler(
     async (req: Request, res: Response) => {
       const { id: riderID } = req.params;
@@ -137,8 +157,6 @@ class BookingRequest {
       );
       if (request) throw new Error("Booking request already exist");
 
-      console.log(request);
-
       const createdRequest = await this.bookingRequestService.create({
         senderID: UID,
         riderID,
@@ -154,45 +172,31 @@ class BookingRequest {
     }
   );
 
-  public cancelBookingRequest = expressAsyncHandler(
+  public cancelBooking = expressAsyncHandler(
     async (req: Request, res: Response) => {
-      const { id: hitID } = req.params;
-      const { UID: selfID } = req.user;
-      await this.validateAccount(selfID);
+      const { id: bookingRequestID } = req.params;
+      const { UID } = req.user;
 
-      const cancelRequest = await this.bookingRequestService.cancel(
-        selfID,
-        hitID
+      // check if there is already existing on the current id
+      const request = await this.bookingRequestService.getRequestByID(
+        bookingRequestID
       );
 
-      if (!cancelRequest)
-        throw new Error("Something went wrong, Please try again later");
+      if (!request) {
+        throw new Error("Invalid Booking request");
+      }
 
-      const bookingResult = await this.bookingService.delete(
-        cancelRequest?._id as any
-      );
-      if (!bookingResult) throw new Error("Deletion Failed");
-
-      res.status(200).json({
-        payload: hitID,
-        message: "Deleted successfully",
+      // Cancel the  Booking
+      const cancelRequest = await this.bookingRequestService.cancel({
+        bookingID: request.bookingID,
+        senderID: UID,
+        riderID: request?.riderID,
       });
-    }
-  );
 
-  public completeBookingRequest = expressAsyncHandler(
-    async (req: Request, res: Response) => {
-      const { id: hitID } = req.params;
-      const { UID: selfID } = req.user;
-      await this.validateAccount(selfID);
-
-      const completeResult = await this.bookingService.done(selfID, hitID);
-
-      if (!completeResult)
-        throw new Error("Something went wrong, Please try again later");
+      if (!cancelRequest) throw new Error("Request Failed");
 
       res.status(200).json({
-        payload: hitID,
+        payload: request?.riderID,
         message: "Deleted successfully",
       });
     }

@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const bookingRequestSchema = new mongoose.Schema(
   {
-    bookingID: { type: Schema.ObjectId, required: true, ref: "account" },
+    bookingID: { type: Schema.ObjectId, required: true, ref: "booking" },
     riderID: {
       type: Schema.ObjectId,
       required: true,

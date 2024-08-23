@@ -38,6 +38,8 @@ const useBookingRequest = () => {
           type: "success",
           text1: "Booked Successfully",
         });
+
+        form.reset();
       },
     });
 
@@ -49,15 +51,33 @@ const useBookingRequest = () => {
    * @param bookingID
    * @returns
    */
-  const cancelMutation = (riderID: string) => {
-    return useMutate({
-      queryKey: `rider-details-${riderID}`,
+  const cancelMutation = (riderID: string, optKey?: string) => {
+    const onCancel = () => {
+      mutate.mutate(riderID);
+    };
+
+    const mutate = useMutate({
+      queryKey: `rider-details-${optKey}`,
       mutationKey: [`booking-cancel-${riderID}`],
       mutationFn: async () =>
         await ProtectedAxios.patch(`/booking/request/cancel/${riderID}`),
+
+      onSuccess: () => {
+        Toast.show({
+          type: "success",
+          text1: "Cancelled Successfully",
+        });
+      },
     });
+
+    return { onCancel, ...mutate };
   };
 
+  /**
+   *
+   * @param bookingID
+   * @returns
+   */
   const acceptMutation = (bookingID: string) => {
     return useMutate({
       mutationKey: [`booking-accept-${bookingID}`],

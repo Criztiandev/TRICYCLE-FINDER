@@ -22,10 +22,15 @@ interface Props extends IAccount {
   bookingStatus?: string;
 }
 
-interface ButtonProps {
-  targetID: string;
+interface BookingButtonProps {
+  riderID: string;
+  bookingID: string;
   status?: string;
   availability?: string;
+}
+
+interface MessageButtonProps {
+  riderID: string;
 }
 
 const RootScreen = () => {
@@ -46,12 +51,13 @@ const RootScreen = () => {
         <ProfileDetails {...data}>
           <XStack className="w-full space-x-4">
             <BookingButton
+              riderID={id as string}
+              bookingID={data?._id as string}
               availability={data?.availability}
               status={data?.status}
-              targetID={data?._id as string}
             />
 
-            <MessageButton targetID={data?._id as string} />
+            <MessageButton riderID={id as string} />
           </XStack>
         </ProfileDetails>
       </View>
@@ -86,8 +92,8 @@ const DetailsHeader: React.FC = () => {
  * @param param - Props that you want ti send a message
  * @returns
  */
-const MessageButton = ({ targetID }: ButtonProps) => {
-  const { mutation } = useCreateConversation(targetID as string);
+const MessageButton = ({ riderID }: MessageButtonProps) => {
+  const { mutation } = useCreateConversation(riderID as string);
   return (
     <Button
       className="flex-1 ml-2"
@@ -107,20 +113,22 @@ const MessageButton = ({ targetID }: ButtonProps) => {
  * @param param - Props that accept the rider id and the status of the booking
  * @returns
  */
-const BookingButton = ({ availability, targetID, status }: ButtonProps) => {
+const BookingButton = ({
+  riderID,
+  availability,
+  bookingID,
+  status,
+}: BookingButtonProps) => {
   const bottomSheetRef = useRef<BottomSheetModal | null>(null);
-  const { requestMutation } = useBookingRequest();
+  const { requestMutation, cancelMutation } = useBookingRequest();
 
-  const { form, isPending, onRequest, isSuccess } = requestMutation(targetID);
+  const { form, isPending, onRequest, isSuccess } = requestMutation(bookingID);
+  const { onCancel } = cancelMutation(bookingID, riderID);
 
   const toggleBottomSheet = () => {
     if (bottomSheetRef.current) {
       bottomSheetRef.current.present();
     }
-  };
-
-  const cancelRequest = () => {
-    console.log("canceling the request");
   };
 
   useEffect(() => {
@@ -135,13 +143,19 @@ const BookingButton = ({ availability, targetID, status }: ButtonProps) => {
     status || "N/A"
   );
 
+  const handlePress = () => {
+    if (buttonText === "Cancel Book") {
+      onCancel();
+    } else {
+      toggleBottomSheet();
+    }
+  };
+
   return (
     <>
       <Button
         className="flex-1 mr-2"
-        onPress={
-          buttonText === "Cancel Book" ? cancelRequest : toggleBottomSheet
-        }
+        onPress={handlePress}
         disabled={isDisabled}
       >
         {buttonText}
@@ -179,12 +193,6 @@ const BookingButton = ({ availability, targetID, status }: ButtonProps) => {
     </>
   );
 };
-
-interface BookingButtonProps {
-  availability: "available" | "unavailable";
-  status: "N/A" | "pending" | "confirmed";
-  onPress: () => void;
-}
 
 const getButtonText = (availability: string, status: string): string => {
   if (availability === "available") {

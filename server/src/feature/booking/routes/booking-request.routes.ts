@@ -5,6 +5,7 @@ import bookingController from "../controller/booking.controller";
 const router = express.Router();
 
 router.post("/create/:id", bookingRequestController.createBooking);
+router.patch("/cancel/:id", bookingRequestController.cancelBooking);
 
 router.get("/:id", bookingController.getBookingDetailsByRequestID);
 router.patch(
@@ -15,10 +16,6 @@ router.patch(
 router.patch(
   "/request/accept/:id",
   bookingRequestController.acceptBookingRequest
-);
-router.delete(
-  "/request/cancel/:id",
-  bookingRequestController.cancelBookingRequest
 );
 
 export default router;

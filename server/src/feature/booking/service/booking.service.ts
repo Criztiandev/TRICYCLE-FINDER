@@ -86,6 +86,12 @@ class BookingService {
 
     return completeResult;
   };
+
+  // new
+
+  public getDetails = async (bookingID: string) => {
+    return await this.bookingRepository.findByHits({ _id: bookingID });
+  };
 }
 
 export default BookingService;

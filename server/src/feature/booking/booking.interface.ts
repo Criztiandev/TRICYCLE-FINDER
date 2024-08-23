@@ -30,3 +30,9 @@ export interface ICreateBooking {
   riderID: string;
   payload: Pick<IBooking, "dropoffLocation" | "pickupLocation">;
 }
+
+export interface ICancelBooking {
+  bookingID: any;
+  senderID: string;
+  riderID: any;
+}

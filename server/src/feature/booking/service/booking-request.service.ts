@@ -1,7 +1,10 @@
 import { FilterQuery, ObjectId } from "mongoose";
-import { ICreateBooking, IBookingRequest } from "../booking.interface";
+import {
+  ICreateBooking,
+  IBookingRequest,
+  ICancelBooking,
+} from "../booking.interface";
 import BookingRequestRepository from "../repository/booking-request.repository";
-import BookingService from "./booking.service";
 import BookingRepository from "../repository/booking.repository";
 
 class BookingRequestService {
@@ -12,13 +15,22 @@ class BookingRequestService {
     this.bookingRepository = new BookingRepository();
   }
 
-  public getRequestByRiderID = async (
-    userID: string | ObjectId,
-    riderID: string | ObjectId
-  ) => {
+  public getRequestByRiderID = async (userID: any, riderID: any) => {
+    const credentials =
+      await this.bookingRequestRepository.fetchBookingRequestByHits(
+        {
+          $and: [{ riderID: riderID }, { recipientID: userID }],
+        },
+        "_id status"
+      );
+
+    return credentials;
+  };
+
+  public getRequestByID = async (BRID: any) => {
     const credentials =
       await this.bookingRequestRepository.fetchBookingRequestByHits({
-        $and: [{ riderID: riderID }, { recipientID: userID }],
+        _id: BRID,
       });
 
     return credentials;
@@ -69,6 +81,8 @@ class BookingRequestService {
     return existingBookingRequest;
   };
 
+  // New
+
   create = async (payload: ICreateBooking) => {
     const { riderID, senderID, payload: data } = payload;
 
@@ -94,6 +108,20 @@ class BookingRequestService {
     return request;
   };
 
+  cancel = async (payload: ICancelBooking) => {
+    const { riderID, senderID, bookingID } = payload;
+
+    const deleteBooking = await this.bookingRepository.deleteByHits({
+      $and: [{ _id: bookingID }, { riderID }, { recipientID: senderID }],
+    });
+
+    if (!deleteBooking) throw new Error("Delete Booking Failed");
+
+    return await this.bookingRequestRepository.deleteByHits({
+      $and: [{ bookingID }, { riderID }, { recipientID: senderID }],
+    });
+  };
+
   accept = async (targetID: string, bookingID: ObjectId | string) => {
     await this.bookingRequestRepository.updateRequestById(
       {
@@ -102,19 +130,6 @@ class BookingRequestService {
       { status: "accepted", isDeleted: true }
     );
     return bookingID;
-  };
-
-  cancel = async (ownerID: string, hits: string) => {
-    // Get all the sent booking requests for the user
-    const bookingRequest = await this.getBookingRequestDetails(ownerID, hits);
-
-    // delete the request
-    const cancelResult = await this.bookingRequestRepository.deleteRequestById(
-      hits
-    );
-    if (!cancelResult) throw new Error("Cancelation failed");
-
-    return bookingRequest;
   };
 
   deleteRequest = async (hits: string) => {

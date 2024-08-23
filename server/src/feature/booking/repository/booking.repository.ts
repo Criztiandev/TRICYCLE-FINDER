@@ -8,6 +8,13 @@ class BookingRepository {
     this.model = bookingModel;
   }
 
+  public findByHits = (hits: FilterQuery<IBooking>, select?: string) => {
+    return this.model
+      .findOne(hits)
+      .select(select || "")
+      .lean();
+  };
+
   public getBookingDetailsByHits = (
     hits: FilterQuery<IBooking>,
     select?: string

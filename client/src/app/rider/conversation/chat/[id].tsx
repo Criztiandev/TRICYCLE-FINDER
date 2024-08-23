@@ -27,8 +27,6 @@ const RootScreen: React.FC = () => {
     name: "Recipient",
   };
 
-  console.log(data);
-
   return (
     <>
       <ConversationHeader recipientName={recipient.name} />

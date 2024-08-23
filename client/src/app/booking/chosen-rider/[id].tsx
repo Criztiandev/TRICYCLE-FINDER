@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useRef } from "react";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Href, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import { ArrowLeft, MessageSquare } from "lucide-react-native";
@@ -16,6 +16,7 @@ import InputField from "@/common/components/form/InputField";
 import BottomSheet from "@/common/components/ui/BottomSheet";
 import useBookingRequest from "@/feature/booking/hooks/useBookingRequest";
 import useRiderDetails from "@/feature/rider/hooks/useRiderDetails";
+import { io } from "socket.io-client";
 
 interface Props extends IAccount {
   status?: string;
@@ -33,16 +34,27 @@ interface MessageButtonProps {
   riderID: string;
 }
 
+const SOCKET_URL = "http://192.168.1.6:4000";
+
 const RootScreen = () => {
+  const router = useRouter();
   const { id } = useLocalSearchParams();
   const { data, isLoading, isError, error } = useRiderDetails(id as string);
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+
+    socket.on("booking-accepted", (acceptedID) => {
+      if (acceptedID === data?._id) {
+        router.push("/booking/user-session" as Href<string>);
+      }
+    });
+  }, [data]);
 
   if (isLoading) return <LoadingScreen />;
   if (isError) {
     return <ErrorScreen error={error} />;
   }
-
-  console.log(JSON.stringify(data, null, 2));
 
   return (
     <>

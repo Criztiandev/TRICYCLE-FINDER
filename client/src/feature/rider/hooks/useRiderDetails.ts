@@ -1,5 +1,3 @@
-import { View, Text } from "react-native";
-import React from "react";
 import useFetch from "@/common/hooks/query/useFetch";
 import { ProtectedAxios } from "@/lib/axios/instances";
 

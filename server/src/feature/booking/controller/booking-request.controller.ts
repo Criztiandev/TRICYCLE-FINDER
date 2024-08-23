@@ -8,6 +8,7 @@ import {
   IBookingRequest,
   IBookingRequestBody,
 } from "../booking.interface";
+import { io } from "../../..";
 
 class BookingRequest {
   private accountService: AccountService;
@@ -198,6 +199,20 @@ class BookingRequest {
       res.status(200).json({
         payload: request?.riderID,
         message: "Deleted successfully",
+      });
+    }
+  );
+
+  public acceptBooking = expressAsyncHandler(
+    async (req: Request, res: Response) => {
+      const { id: bookingRequestID } = req.params;
+      const { UID } = req.user;
+
+      io.emit("booking-accepted", bookingRequestID);
+
+      res.status(200).json({
+        payload: UID,
+        message: "Accepted successfully",
       });
     }
   );

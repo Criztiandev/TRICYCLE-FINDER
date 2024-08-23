@@ -40,6 +40,7 @@ const SOCKET_URL = "http://192.168.1.6:4000";
 const RootScreen = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams();
+
   const { data, isLoading, isError, error } = useRiderDetails(id as string);
 
   /**
@@ -78,7 +79,7 @@ const RootScreen = () => {
       });
       router.replace(`/`);
     }
-  }, [data?.status]);
+  }, [data]);
 
   if (isLoading) return <LoadingScreen />;
   if (isError) {

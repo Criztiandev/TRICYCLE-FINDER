@@ -4,15 +4,16 @@ import { FlashList } from "@shopify/flash-list";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
 import { MessageCircle } from "lucide-react-native";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import Input from "@/common/components/ui/Input";
 import AccountBlob from "@/feature/account/component/AccountBlob";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
-import useRiderRequestList from "@/feature/rider/hooks/useRiderRequestList";
+import { IAccount } from "@/feature/account/interface/account.interface";
+import useRiderList from "@/feature/rider/hooks/useRiderList";
 
 const RootScreen = () => {
-  const { data, isLoading, isError, error } = useRiderRequestList();
+  const { data, isLoading, isError, error } = useRiderList();
   const router = useRouter();
 
   if (isLoading) return <LoadingScreen />;
@@ -21,30 +22,10 @@ const RootScreen = () => {
   return (
     <>
       <HomeScreenHeader />
-      <ScreenBaseLayout>
-        <TouchableOpacity className="w-full px-4">
-          <Input
-            placeholder="Whats is in your mind ?"
-            className="rounded-full px-3"
-            disabled
-          />
-        </TouchableOpacity>
-        <FlashList
-          data={data}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }: { item: any }) => (
-            <TouchableOpacity
-              onPress={() =>
-                router.navigate(
-                  `/booking/chosen-rider/${item.id}` as Href<string>
-                )
-              }
-            >
-              <AccountBlob {...item.senderID} />
-            </TouchableOpacity>
-          )}
-          estimatedItemSize={100}
-        />
+      <ScreenBaseLayout className="flex-1">
+        <View className="flex justify-center items-center flex-1">
+          <Button>Search Rider</Button>
+        </View>
       </ScreenBaseLayout>
     </>
   );
@@ -71,7 +52,7 @@ const HomeScreenHeader = () => {
                 variant="ghost"
                 size="icon"
                 onPress={() =>
-                  router.push("/rider/conversation/list" as Href<string>)
+                  router.push("/user/conversation/list" as Href<string>)
                 }
               >
                 <MessageCircle color="black" />

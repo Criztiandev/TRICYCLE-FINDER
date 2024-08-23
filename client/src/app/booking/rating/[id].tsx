@@ -10,16 +10,20 @@ import SelectField from "@/common/components/form/SelectField";
 import BottomSheet from "@/common/components/ui/BottomSheet";
 import useRateRider from "@/feature/rider/hooks/useRiderRating";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useQueryClient } from "@tanstack/react-query";
 
 const RootScreen = () => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { id } = useLocalSearchParams();
 
-  console.log(id);
+  const handleBack = () => {
+    queryClient.clear();
+    router.replace("/");
+  };
 
   return (
     <>
-      <DetailsHeader />
       <View className="bg-white flex-1 p-4 justify-center items-center">
         <Text className="text-5xl font-bold  text-center">
           Thank you for using the Apps
@@ -28,7 +32,7 @@ const RootScreen = () => {
           <RatingButton riderID={id as string} />
           <Button
             variant="outlined"
-            onPress={() => router.replace("/")}
+            onPress={handleBack}
             textClassName="text-lgz"
           >
             Back
@@ -40,26 +44,6 @@ const RootScreen = () => {
 };
 
 export default RootScreen;
-
-/**
- *
- * @returns Header
- */
-const DetailsHeader: React.FC = () => {
-  const router = useRouter();
-  return (
-    <Stack.Screen
-      options={{
-        title: "Account Details",
-        headerLeft: () => (
-          <TouchableOpacity className="mr-4" onPress={() => router.back()}>
-            <ArrowLeft color="black" />
-          </TouchableOpacity>
-        ),
-      }}
-    />
-  );
-};
 
 /**
  *

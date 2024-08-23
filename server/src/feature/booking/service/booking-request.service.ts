@@ -218,7 +218,7 @@ class BookingRequestService {
   done = async (bookingID: string) => {
     const requestDetails = await this.bookingRequestRepository.getOneByHits(
       { $and: [{ _id: bookingID }, { status: "accepted" }] },
-      "riderID"
+      "riderID bookingID"
     );
 
     console.log(requestDetails);

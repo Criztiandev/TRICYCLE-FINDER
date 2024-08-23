@@ -16,6 +16,16 @@ const RootLayout = () => {
       />
 
       <Tabs.Screen
+        name="search"
+        options={{
+          title: "Search",
+          tabBarIcon: (props) => (
+            <Search color={props.focused ? "black" : props.color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
         name="account"
         options={{
           title: "Account",

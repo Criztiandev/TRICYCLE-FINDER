@@ -15,36 +15,43 @@ class BookingRiderController {
   }
 
   public riderDetails = expressAsyncHandler(
-    async (req: Request, res: Response) => {
-      const { UID } = req.user;
-      const { id: riderID } = req.params;
+    async (req: Request, res: Response): Promise<any> => {
+      try {
+        const { UID } = req.user;
+        const { id: riderID } = req.params;
 
-      // get the rider account
-      const credentials = await this.accountService.getDetails(riderID);
+        // get the rider account
+        const credentials = await this.accountService.getDetails(riderID);
+        if (!credentials) {
+          return res.status(404).json({ error: "Account does not exist" });
+        }
 
-      // get if the rider has a pending booking from the current user
-      const request = await this.bookingRequestService.getRequestByRiderID(
-        UID,
-        riderID
-      );
+        // get if the rider has a pending booking from the current user
+        const request = await this.bookingRequestService.getRequestByRiderID(
+          UID,
+          riderID
+        );
 
-      if (!request) {
-        res.status(200).json({
+        if (!request) {
+          return res.status(200).json({
+            payload: {
+              ...credentials,
+              availability: "available",
+              status: "N/A",
+            },
+          });
+        }
+
+        return res.status(200).json({
           payload: {
             ...credentials,
+            ...request,
             availability: "available",
-            status: "N/A",
           },
         });
+      } catch (e) {
+        console.log(e);
       }
-
-      res.status(200).json({
-        payload: {
-          ...credentials,
-          ...request,
-          availability: "available",
-        },
-      });
     }
   );
 

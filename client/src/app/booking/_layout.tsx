@@ -10,7 +10,10 @@ const RootScreen = () => {
         name="chosen-rider/[id]"
         options={{ title: "Ride Details" }}
       />
-      <Stack.Screen name="rating/[id]" options={{ title: "Sessions" }} />
+      <Stack.Screen
+        name="rating/[id]"
+        options={{ title: "Outro", headerShown: false }}
+      />
     </Stack>
   );
 };

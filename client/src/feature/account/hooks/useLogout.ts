@@ -12,25 +12,15 @@ const useLogout = () => {
 
   const handleLogout = useCallback(async () => {
     try {
-      console.log("Initiating logout process...");
       setCredentials(null);
 
-      console.log("Removing tokens...");
       await storage.removeItem("auth");
       await storage.removeItem("accessToken");
       await storage.removeItem("refreshToken");
 
-      console.log("Tokens removed, checking storage...");
-      const authToken = await storage.getItem("accessToken");
-      console.log("Access Token After Removal:", authToken);
-
-      console.log("Clearing Axios headers...");
       delete ProtectedAxios.defaults.headers.common["Authorization"];
 
-      console.log("Resetting queries...");
-      queryClient.resetQueries();
-
-      console.log("Logout process completed.");
+      queryClient.clear();
     } catch (error) {
       console.error("Error during logout:", error);
     }

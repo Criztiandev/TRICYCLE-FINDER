@@ -41,7 +41,7 @@ const RootScreen = () => {
 
     socket.on("booking-done", (acceptedID) => {
       if (acceptedID === data?._id) {
-        router.replace(`booking/rating/${data?._id}` as Href<string>);
+        router.replace(`booking/rating/${id}` as Href<string>);
       }
     });
   }, [data]);

@@ -10,13 +10,23 @@ import AccountBlob from "@/feature/account/component/AccountBlob";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import useRiderRequestList from "@/feature/rider/hooks/useRiderRequestList";
+import { useEffect } from "react";
+import useBookingSession from "@/feature/booking/hooks/useBookingSession";
 
 const RootScreen = () => {
   const { data, isLoading, isError, error } = useRiderRequestList();
+  const {
+    data: sessionData,
+    isLoading: sessionLoading,
+    isError: sessionError,
+    error: sessionErrors,
+  } = useBookingSession();
   const router = useRouter();
 
-  if (isLoading) return <LoadingScreen />;
-  if (isError) return <ErrorScreen error={error} />;
+  if (isLoading || sessionLoading) return <LoadingScreen />;
+  if (isError || sessionError) return <ErrorScreen />;
+
+  console.log(sessionErrors);
 
   return (
     <>

@@ -11,13 +11,26 @@ import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import { IAccount } from "@/feature/account/interface/account.interface";
 import useRiderList from "@/feature/rider/hooks/useRiderList";
+import useBookingSession from "@/feature/booking/hooks/useBookingSession";
+import { useEffect } from "react";
 
 const RootScreen = () => {
   const { data, isLoading, isError, error } = useRiderList();
+  const {
+    data: sessionData,
+    isLoading: sessionLoading,
+    isError: sessionError,
+  } = useBookingSession();
   const router = useRouter();
 
-  if (isLoading) return <LoadingScreen />;
-  if (isError) return <ErrorScreen error={error} />;
+  useEffect(() => {
+    if (sessionData?.riderID) {
+      router.replace(`/booking/user-session/${sessionData?.riderID}`);
+    }
+  }, [sessionData]);
+
+  if (isLoading || sessionLoading) return <LoadingScreen />;
+  if (isError || sessionError) return <ErrorScreen />;
 
   return (
     <>

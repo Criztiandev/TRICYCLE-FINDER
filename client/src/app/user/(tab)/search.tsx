@@ -7,11 +7,12 @@ import { View } from "react-native";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import useRiderList from "@/feature/rider/hooks/useRiderList";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomSheet from "@/common/components/ui/BottomSheet";
 import useRiderDetails from "@/feature/rider/hooks/useRiderDetails";
 import ProfileDetails from "@/feature/account/component/ProfileDetails";
+import Toast from "react-native-toast-message";
 
 const RootScreen = () => {
   const [selectedRider, setSelectedRider] = useState<Record<
@@ -104,7 +105,6 @@ const RiderDetails = ({
   id: string;
   onNavigate: () => void;
 }) => {
-  const router = useRouter();
   const { data, isLoading, isError, error } = useRiderDetails(id as string);
 
   if (isLoading) return <LoadingScreen />;

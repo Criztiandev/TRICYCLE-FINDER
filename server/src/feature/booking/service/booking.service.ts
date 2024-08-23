@@ -1,90 +1,44 @@
 import { FilterQuery } from "mongoose";
-import { IBooking, IBookingRequest } from "../booking.interface";
+import { IBookingRequest } from "../booking.interface";
 import BookingRepository from "../repository/booking.repository";
-import BookingRequestService from "./booking-request.service";
-import AccountService from "../../account/services/account.service";
+import BookingRequestRepository from "../repository/booking-request.repository";
 
 class BookingService {
   private bookingRepository: BookingRepository;
-  private bookingRequestService: BookingRequestService;
-  private accountService: AccountService;
+  private bookingRequestRepository: BookingRequestRepository;
+
   constructor() {
-    this.bookingRequestService = new BookingRequestService();
     this.bookingRepository = new BookingRepository();
-    this.accountService = new AccountService();
+    this.bookingRequestRepository = new BookingRequestRepository();
   }
-
-  getBookingDetails = async (hits: string) => {
-    const result: any =
-      await this.bookingRequestService.getBookingRequestByHits({
-        $or: [{ senderID: hits }, { _id: hits }],
-      });
-
-    if (!result) throw new Error("Booking request doesnt exist");
-
-    const accountCredentials = await this.accountService.getAccountCredentials(
-      {
-        _id: result?.senderID,
-      },
-      "firstName lastName phoneNumber"
-    );
-
-    if (!accountCredentials) throw new Error("Account doesnt exist");
-
-    const credentials = await this.bookingRepository.getBookingDetailsByHits({
-      $or: [{ bookingRequestID: result?._id }],
-    });
-
-    if (!credentials) throw new Error("Booking doesnt exist");
-
-    return {
-      ...accountCredentials,
-      ...credentials,
-      accountId: accountCredentials._id,
-      status: result?.status,
-    };
-  };
-
-  create = async (payload: IBooking) => {
-    const credentials = await this.bookingRepository.create(payload);
-
-    if (!credentials) throw new Error("Service Create failed");
-
-    return credentials;
-  };
-
-  delete = async (hits: Pick<IBooking, "_id">) => {
-    const result = await this.bookingRepository.deleteByHits({
-      $or: [{ _id: hits }, { bookingRequestID: hits }],
-    });
-
-    if (!result) throw new Error("Deletion Failed");
-
-    return result;
-  };
-
-  complete = async (hits: string) => {
-    const result = await this.bookingRepository.updateByHits(
-      { $or: [{ _: hits }, { bookingRequestID: hits }] },
-      { status: "complete" }
-    );
-
-    if (!result) throw new Error("Complete Failed");
-
-    return result;
-  };
-
-  done = async (ownerID: string, hits: string) => {
-    const completeResult = await this.complete(hits);
-    if (!completeResult) throw new Error("Completion Failed");
-
-    return completeResult;
-  };
 
   // new
 
   public getDetails = async (bookingID: string) => {
     return await this.bookingRepository.findByHits({ _id: bookingID });
+  };
+
+  public getActiveBooking = async (ownerID: string) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of today
+
+    const request = await this.bookingRequestRepository.getOneByHits(
+      {
+        $and: [
+          { recipientID: ownerID },
+          { status: "accepted" },
+          {
+            createdAt: {
+              $gte: today,
+              $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
+            },
+          },
+        ],
+      },
+      "riderID accepted"
+    );
+
+    return request;
   };
 }
 

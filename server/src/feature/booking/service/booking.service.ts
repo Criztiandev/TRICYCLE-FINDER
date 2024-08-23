@@ -15,9 +15,10 @@ class BookingService {
   }
 
   getBookingDetails = async (hits: string) => {
-    const result = await this.bookingRequestService.getBookingRequestByHits({
-      $or: [{ senderID: hits }, { _id: hits }],
-    });
+    const result: any =
+      await this.bookingRequestService.getBookingRequestByHits({
+        $or: [{ senderID: hits }, { _id: hits }],
+      });
 
     if (!result) throw new Error("Booking request doesnt exist");
 
@@ -52,7 +53,7 @@ class BookingService {
     return credentials;
   };
 
-  delete = async (hits: Pick<IBooking, "_id" | "bookingRequestID">) => {
+  delete = async (hits: Pick<IBooking, "_id">) => {
     const result = await this.bookingRepository.deleteByHits({
       $or: [{ _id: hits }, { bookingRequestID: hits }],
     });

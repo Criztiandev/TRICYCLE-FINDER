@@ -23,7 +23,7 @@ class AccountRepository {
       .select(select || "");
   };
 
-  public fetchAccountById = async (id: ObjectId, select?: string) => {
+  public fetchAccountById = async (id: ObjectId | string, select?: string) => {
     return this.model
       .findById(id)
       .lean()

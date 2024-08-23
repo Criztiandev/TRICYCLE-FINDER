@@ -2,11 +2,15 @@ import mongoose, { Schema } from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
   {
-    bookingRequestID: {
+    riderID: {
       type: Schema.ObjectId,
       required: true,
-      ref: "BookingRequest",
-      unique: true,
+      ref: "account",
+    },
+    recipientID: {
+      type: Schema.ObjectId,
+      required: true,
+      ref: "account",
     },
     pickupLocation: { type: String, required: true },
     dropoffLocation: { type: String, required: true },

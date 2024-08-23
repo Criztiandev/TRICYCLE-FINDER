@@ -35,6 +35,7 @@ export default function RootLayout() {
                     <Stack.Screen name="user" />
                     <Stack.Screen name="rider" />
                     <Stack.Screen name="account" />
+                    <Stack.Screen name="booking" />
                   </Stack>
                   <Toast />
                 </>

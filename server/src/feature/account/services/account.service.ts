@@ -8,6 +8,17 @@ class AccountService {
     this.repository = new AccountRepository();
   }
 
+  public getDetails = async (
+    id: string | ObjectId
+  ): Promise<IAccount | null> => {
+    const credentials = await this.repository.fetchAccountById(
+      id,
+      "-password -role"
+    );
+
+    return credentials;
+  };
+
   public getAllAccount = async (ownerID?: string) => {
     const query: any = {
       isActive: true,

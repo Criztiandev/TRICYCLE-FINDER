@@ -37,7 +37,9 @@ const RootScreen = () => {
           renderItem={({ item }: { item: any }) => (
             <TouchableOpacity
               onPress={() =>
-                router.navigate(`/rider/booking/request/${item?._id}`)
+                router.navigate(
+                  `/booking/chosen-rider/${item.id}` as Href<string>
+                )
               }
             >
               <AccountBlob {...item.senderID} />

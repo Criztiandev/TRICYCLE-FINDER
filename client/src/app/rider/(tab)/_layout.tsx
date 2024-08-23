@@ -25,6 +25,16 @@ const RootLayout = () => {
       />
 
       <Tabs.Screen
+        name="transaction"
+        options={{
+          title: "History",
+          tabBarIcon: (props) => (
+            <UserCircle color={props.focused ? "black" : props.color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
         name="account"
         options={{
           title: "Account",

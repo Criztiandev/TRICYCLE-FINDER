@@ -47,27 +47,24 @@ function useMutate<TData, TVariables>({
     },
 
     onError: (error: AxiosError) => {
-      if (onError) {
-        onError(error);
-        if (error instanceof AxiosError && error.response) {
-          const { error: errorMessage } = error.response.data as any;
+      if (error instanceof AxiosError && error.response) {
+        const { error: errorMessage } = error.response.data as any;
 
-          console.log(errorMessage);
-          Toast.show({
-            type: "error",
-            text1: errorMessage || "Something went wrong",
-          });
-        } else if (error.request) {
-          Toast.show({
-            type: "error",
-            text1: "No response received from the server",
-          });
-        } else {
-          Toast.show({
-            type: "error",
-            text1: "An unknown error occurred",
-          });
-        }
+        console.log(errorMessage);
+        Toast.show({
+          type: "error",
+          text1: errorMessage || "Something went wrong",
+        });
+      } else if (error.request) {
+        Toast.show({
+          type: "error",
+          text1: "No response received from the server",
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "An unknown error occurred",
+        });
       }
     },
   });

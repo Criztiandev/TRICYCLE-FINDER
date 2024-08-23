@@ -15,13 +15,15 @@ const ProfileDetails: FC<Props> = ({
   firstName,
   lastName,
   status,
+  phoneNumber,
+  address,
   children,
   ...props
 }) => {
   return (
     <View className="relative">
-      <View className="h-[200px]  rounded-[5px]"></View>
-      <YStack className="absolute top-8 left-0 right-0 bottom-0 flex items-center space-y-4">
+      <View className="  rounded-[5px] justify-center items-center"></View>
+      <YStack className="justify-center items-center space-y-4">
         <Avatar size={150} />
         {/* Full Name */}
         <YStack className="justify-center justify-items-center">
@@ -31,8 +33,10 @@ const ProfileDetails: FC<Props> = ({
         </YStack>
 
         <YStack className="justify-center items-center space-y-2 mb-4">
-          <Text className="text-base">Milagross, Masbate, Mandaon</Text>
-          <Text className="text-base">09482004868</Text>
+          <Text className="text-base">
+            {address || "Poblacion, Mandaon, Masbate"}
+          </Text>
+          <Text className="text-base">{phoneNumber}</Text>
         </YStack>
 
         {children}

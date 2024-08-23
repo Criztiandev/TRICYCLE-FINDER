@@ -11,6 +11,11 @@ export const accountValidation = z.object({
     .min(2, "Last name must be at least 2 characters long")
     .max(64, "Last name cannot exceed 64 characters"),
 
+  address: z
+    .string()
+    .min(2, "Address must be at least 2 characters long")
+    .max(64, "Address cannot exceed 64 characters"),
+
   email: z
     .string()
     .email("Invalid email address")

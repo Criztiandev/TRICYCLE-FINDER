@@ -3,8 +3,9 @@ import { ObjectId } from "mongoose";
 // BookingRequestInterface.ts
 export interface IBookingRequest {
   _id?: string;
-  senderID: string;
-  recipientID: string;
+  bookingID: any;
+  riderID: string | ObjectId;
+  recipientID: string | ObjectId;
   status?: "pending" | "accepted" | "rejected " | "all";
   isDeleted?: boolean;
 }
@@ -12,7 +13,8 @@ export interface IBookingRequest {
 // BookingInterface.ts
 export interface IBooking {
   _id?: string;
-  bookingRequestID: string | ObjectId;
+  riderID: string | ObjectId;
+  recipientID: string | ObjectId;
   pickupLocation: string;
   dropoffLocation: string;
   status?: any;
@@ -21,4 +23,10 @@ export interface IBooking {
 export interface IBookingRequestBody
   extends Pick<IBooking, "pickupLocation" | "dropoffLocation"> {
   riderID: string;
+}
+
+export interface ICreateBooking {
+  senderID: string;
+  riderID: string;
+  payload: Pick<IBooking, "dropoffLocation" | "pickupLocation">;
 }

@@ -1,0 +1,198 @@
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import LoadingScreen from "@/layout/screen/LoadingScreen";
+import ErrorScreen from "@/layout/screen/ErrorScreen";
+import { ArrowLeft, MessageSquare } from "lucide-react-native";
+import ProfileDetails from "@/feature/account/component/ProfileDetails";
+import XStack from "@/common/components/stacks/XStack";
+import { IAccount } from "@/feature/account/interface/account.interface";
+import Button from "@/common/components/ui/Button";
+import useCreateConversation from "@/feature/conversation/hooks/useCreateConversation";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { FormProvider } from "react-hook-form";
+import YStack from "@/common/components/stacks/YStack";
+import InputField from "@/common/components/form/InputField";
+import BottomSheet from "@/common/components/ui/BottomSheet";
+import useBookingRequest from "@/feature/booking/hooks/useBookingRequest";
+import useRiderDetails from "@/feature/rider/hooks/useRiderDetails";
+
+interface Props extends IAccount {
+  status?: string;
+  bookingStatus?: string;
+}
+
+interface ButtonProps {
+  targetID: string;
+  status?: string;
+  availability?: string;
+}
+
+const RootScreen = () => {
+  const { id } = useLocalSearchParams();
+  const { data, isLoading, isError, error } = useRiderDetails(id as string);
+
+  if (isLoading) return <LoadingScreen />;
+  if (isError) {
+    return <ErrorScreen error={error} />;
+  }
+
+  console.log(JSON.stringify(data, null, 2));
+
+  return (
+    <>
+      <DetailsHeader />
+      <View className="bg-white flex-1 p-4 justify-center">
+        <ProfileDetails {...data}>
+          <XStack className="w-full space-x-4">
+            <BookingButton
+              availability={data?.availability}
+              status={data?.status}
+              targetID={data?._id as string}
+            />
+
+            <MessageButton targetID={data?._id as string} />
+          </XStack>
+        </ProfileDetails>
+      </View>
+    </>
+  );
+};
+
+export default RootScreen;
+
+/**
+ *
+ * @returns Header
+ */
+const DetailsHeader: React.FC = () => {
+  const router = useRouter();
+  return (
+    <Stack.Screen
+      options={{
+        title: "Account Details",
+        headerLeft: () => (
+          <TouchableOpacity className="mr-4" onPress={() => router.back()}>
+            <ArrowLeft color="black" />
+          </TouchableOpacity>
+        ),
+      }}
+    />
+  );
+};
+
+/**
+ *
+ * @param param - Props that you want ti send a message
+ * @returns
+ */
+const MessageButton = ({ targetID }: ButtonProps) => {
+  const { mutation } = useCreateConversation(targetID as string);
+  return (
+    <Button
+      className="flex-1 ml-2"
+      variant="outlined"
+      onPress={() => mutation.mutate("")}
+    >
+      <View className="flex-1 flex-row justify-center items-center space-x-2">
+        <MessageSquare color="black" />
+        <Text className="text-base"> Message</Text>
+      </View>
+    </Button>
+  );
+};
+
+/**
+ *
+ * @param param - Props that accept the rider id and the status of the booking
+ * @returns
+ */
+const BookingButton = ({ availability, targetID, status }: ButtonProps) => {
+  const bottomSheetRef = useRef<BottomSheetModal | null>(null);
+  const { requestMutation } = useBookingRequest();
+
+  const { form, isPending, onRequest, isSuccess } = requestMutation(targetID);
+
+  const toggleBottomSheet = () => {
+    if (bottomSheetRef.current) {
+      bottomSheetRef.current.present();
+    }
+  };
+
+  const cancelRequest = () => {
+    console.log("canceling the request");
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      bottomSheetRef.current?.close();
+    }
+  }, [isSuccess]);
+
+  const isDisabled = availability !== "available";
+  const buttonText = getButtonText(
+    availability || "unavailable",
+    status || "N/A"
+  );
+
+  return (
+    <>
+      <Button
+        className="flex-1 mr-2"
+        onPress={
+          buttonText === "Cancel Book" ? cancelRequest : toggleBottomSheet
+        }
+        disabled={isDisabled}
+      >
+        {buttonText}
+      </Button>
+
+      <BottomSheet ref={bottomSheetRef} snapPoints={["50%"]}>
+        <View className="p-4">
+          <FormProvider {...form}>
+            <YStack className="space-y-4">
+              <Text className="text-2xl font-bold text-center ">Transport</Text>
+              <View>
+                <InputField
+                  label="Pickup Location"
+                  name="pickupLocation"
+                  placeholder="Enter your Pickup Location"
+                />
+              </View>
+              <View>
+                <InputField
+                  label="Drop off Location"
+                  name="dropoffLocation"
+                  placeholder="Enter your Dropoff location"
+                />
+              </View>
+              <Button
+                disabled={isPending}
+                onPress={form.handleSubmit(onRequest)}
+              >
+                Book
+              </Button>
+            </YStack>
+          </FormProvider>
+        </View>
+      </BottomSheet>
+    </>
+  );
+};
+
+interface BookingButtonProps {
+  availability: "available" | "unavailable";
+  status: "N/A" | "pending" | "confirmed";
+  onPress: () => void;
+}
+
+const getButtonText = (availability: string, status: string): string => {
+  if (availability === "available") {
+    return status === "N/A"
+      ? "Book"
+      : status === "pending"
+      ? "Cancel Book"
+      : "Manage Booking";
+  }
+  return "Unavailable";
+};

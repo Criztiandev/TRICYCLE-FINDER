@@ -101,7 +101,7 @@ class BookingRequest {
 
       if (!bookingRequest) throw new Error("Booking request doest exist");
 
-      // accept the booking reuqes
+      // accept the booking request
       const acceptRequest = await this.bookingRequestService.accept(
         selfID,
         (bookingRequest as any)?._id
@@ -119,31 +119,36 @@ class BookingRequest {
 
   public createBooking = expressAsyncHandler(
     async (req: Request, res: Response) => {
-      const { riderID, dropoffLocation, pickupLocation } =
-        req.body as IBookingRequestBody;
-      const { UID: selfID } = req.user;
+      const { id: riderID } = req.params;
+      const { UID } = req.user;
+      const payload = req.body as Pick<
+        IBooking,
+        "dropoffLocation" | "pickupLocation"
+      >;
 
-      // Check if the target account exists
+      // check if the account exist
+      const credentials = await this.accountService.getDetails(riderID);
+      if (!credentials) throw new Error("Account doesnt exist");
 
-      await this.validateAccount(riderID);
+      // check if there is already existing on the current id
+      const request = await this.bookingRequestService.getRequestByRiderID(
+        UID,
+        riderID
+      );
+      if (request) throw new Error("Booking request already exist");
 
-      // create booking and then the request
+      console.log(request);
 
-      const requestResult = await this.bookingRequestService.create({
-        senderID: selfID,
-        recipientID: riderID,
+      const createdRequest = await this.bookingRequestService.create({
+        senderID: UID,
+        riderID,
+        payload,
       });
 
-      const bookingResult = await this.bookingService.create({
-        bookingRequestID: requestResult._id as any,
-        dropoffLocation,
-        pickupLocation,
-      });
-
-      if (!bookingResult) throw new Error("Booking Failed");
+      if (!createdRequest) throw new Error("Creation Failed");
 
       res.status(200).json({
-        payload: requestResult?._id,
+        payload: null,
         message: "Created successfully",
       });
     }

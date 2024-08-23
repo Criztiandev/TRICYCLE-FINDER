@@ -1,13 +1,30 @@
 import { FilterQuery, ObjectId } from "mongoose";
-import { IBookingRequest } from "../booking.interface";
+import { ICreateBooking, IBookingRequest } from "../booking.interface";
 import BookingRequestRepository from "../repository/booking-request.repository";
 import BookingService from "./booking.service";
+import BookingRepository from "../repository/booking.repository";
 
 class BookingRequestService {
   private bookingRequestRepository: BookingRequestRepository;
+  private bookingRepository: BookingRepository;
   constructor() {
     this.bookingRequestRepository = new BookingRequestRepository();
+    this.bookingRepository = new BookingRepository();
   }
+
+  public getRequestByRiderID = async (
+    userID: string | ObjectId,
+    riderID: string | ObjectId
+  ) => {
+    const credentials =
+      await this.bookingRequestRepository.fetchBookingRequestByHits({
+        $and: [{ riderID: riderID }, { recipientID: userID }],
+      });
+
+    return credentials;
+  };
+
+  // OLD
 
   getAllBookingRequest = async (
     ownerID: string,
@@ -52,24 +69,29 @@ class BookingRequestService {
     return existingBookingRequest;
   };
 
-  /**
-   *
-   * @param senderID - Recipient ID that you want to accept
-   * @param bookingID - Booking request ID
-   * @returns id of the booking request
-   */
+  create = async (payload: ICreateBooking) => {
+    const { riderID, senderID, payload: data } = payload;
 
-  create = async (payload: IBookingRequest) => {
-    const { senderID, recipientID } = payload;
+    // create booking credentials
+    const bookingCredentials = await this.bookingRepository.create({
+      riderID,
+      recipientID: senderID,
+      ...data,
+    });
 
-    const existingRequest = await this.getBookingRequestDetails(
-      senderID,
-      recipientID
-    );
+    if (!bookingCredentials) throw new Error("Booking create failed");
 
-    if (existingRequest) throw new Error("Booking request already exist");
+    const request = await this.bookingRequestRepository.create({
+      bookingID: bookingCredentials._id,
+      riderID,
+      recipientID: senderID,
+    });
 
-    return this.bookingRequestRepository.create(payload);
+    if (!request) {
+      throw new Error("Booking Request creation failed");
+    }
+
+    return request;
   };
 
   accept = async (targetID: string, bookingID: ObjectId | string) => {

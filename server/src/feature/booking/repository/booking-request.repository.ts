@@ -8,6 +8,16 @@ class BookingRequestRepository {
     this.model = bookingRequestModel;
   }
 
+  public fetchBookingRequestByHits = (
+    hits: FilterQuery<IBookingRequest>,
+    select?: string
+  ) => {
+    return this.model
+      .findOne(hits)
+      .lean()
+      .select(select || {});
+  };
+
   /**
    * This functon get all the request
    * @param hits - his are the filter that we are looking for
@@ -54,7 +64,7 @@ class BookingRequestRepository {
    * @param payload Payload of the booking request
    * @returns ID of the successful created request
    */
-  public create = async (payload: IBookingRequest) => {
+  public create = async (payload: any) => {
     const credentials = await this.model.create(payload);
 
     if (!credentials) throw new Error("Booking request failed");

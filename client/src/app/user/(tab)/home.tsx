@@ -35,7 +35,11 @@ const RootScreen = () => {
           showsVerticalScrollIndicator={false}
           renderItem={({ item }: { item: IAccount }) => (
             <TouchableOpacity
-              onPress={() => router.navigate(`/account/details/${item._id}`)}
+              onPress={() =>
+                router.navigate(
+                  `/booking/chosen-rider/${item._id}` as Href<string>
+                )
+              }
             >
               <AccountBlob {...item} />
             </TouchableOpacity>

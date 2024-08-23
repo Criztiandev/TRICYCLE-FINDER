@@ -1,4 +1,5 @@
-import { useRouter } from "expo-router";
+import { IStoredDetails } from "@/feature/account/interface/account.interface";
+import { Href, useRouter } from "expo-router";
 import React, {
   createContext,
   FC,
@@ -9,8 +10,8 @@ import React, {
 } from "react";
 
 interface AuthContextType {
-  user: any | null;
-  setCredentials: (value: any) => void;
+  user: IStoredDetails | null;
+  setCredentials: (value: IStoredDetails | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,18 +27,23 @@ export const useAuth = () => {
 interface AuthProviderProps extends PropsWithChildren {}
 
 const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<IStoredDetails | null>(null);
   const router = useRouter();
 
-  const setCredentials = (value: string) => {
+  const routeMap: Record<"user" | "rider", string> = {
+    user: "/user/home",
+    rider: "/rider/home",
+  };
+
+  const setCredentials = (value: IStoredDetails | null) => {
     setUser(value);
   };
 
   useEffect(() => {
     if (user) {
-      router.replace("/user/home");
+      router.replace(routeMap[user.role] as Href<string>);
     }
-  }, [user]);
+  }, [user, router]);
 
   return (
     <AuthContext.Provider value={{ user, setCredentials }}>

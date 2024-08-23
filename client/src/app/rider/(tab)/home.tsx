@@ -11,9 +11,10 @@ import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import { IAccount } from "@/feature/account/interface/account.interface";
 import useRiderList from "@/feature/rider/hooks/useRiderList";
+import useRiderRequestList from "@/feature/rider/hooks/useRiderRequestList";
 
 const RootScreen = () => {
-  const { data, isLoading, isError, error } = useRiderList();
+  const { data, isLoading, isError, error } = useRiderRequestList();
   const router = useRouter();
 
   if (isLoading) return <LoadingScreen />;
@@ -33,11 +34,13 @@ const RootScreen = () => {
         <FlashList
           data={data}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }: { item: IAccount }) => (
+          renderItem={({ item }: { item: any }) => (
             <TouchableOpacity
-              onPress={() => router.navigate(`/account/details/${item._id}`)}
+              onPress={() =>
+                router.navigate(`/rider/booking/request/${item?._id}`)
+              }
             >
-              <AccountBlob {...item} />
+              <AccountBlob {...item.senderID} />
             </TouchableOpacity>
           )}
           estimatedItemSize={100}
@@ -68,7 +71,7 @@ const HomeScreenHeader = () => {
                 variant="ghost"
                 size="icon"
                 onPress={() =>
-                  router.push("/user/conversation/list" as Href<string>)
+                  router.push("/rider/conversation/list" as Href<string>)
                 }
               >
                 <MessageCircle color="black" />

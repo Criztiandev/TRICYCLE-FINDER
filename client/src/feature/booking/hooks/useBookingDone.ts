@@ -3,26 +3,26 @@ import { ProtectedAxios } from "@/lib/axios/instances";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
 
-const useAcceptRequest = (id: string) => {
+const useBookingDone = (id: string) => {
   const router = useRouter();
   const mutation = useMutate({
-    queryKey: `booking-details-${id}`,
+    queryKey: `book-details-${id}`,
     mutationKey: [`booking-request-${id}`],
     mutationFn: async () =>
-      await ProtectedAxios.patch(`/booking/request/accept/${id}`),
+      await ProtectedAxios.patch(`/booking/request/done/${id}`),
 
     onSuccess: () => {
       Toast.show({
         type: "success",
-        text1: "Booked Successfully",
+        text1: "Book is done",
       });
-    },
 
-    onError: () => {
-      router.back();
+      setTimeout(() => {
+        router.replace("/");
+      }, 1000);
     },
   });
   return { mutation };
 };
 
-export default useAcceptRequest;
+export default useBookingDone;

@@ -33,6 +33,7 @@ export default function RootLayout() {
                   <Stack screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="auth" />
                     <Stack.Screen name="user" />
+                    <Stack.Screen name="rider" />
                     <Stack.Screen name="account" />
                   </Stack>
                   <Toast />

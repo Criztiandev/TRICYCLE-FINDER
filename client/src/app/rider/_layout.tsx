@@ -11,6 +11,7 @@ const RootLayout = () => {
         <Stack.Screen name="(tab)" />
         <Stack.Screen name="conversation" />
         <Stack.Screen name="details/[id]" />
+        <Stack.Screen name="booking" />
       </Stack>
     </ProtectedRoute>
   );

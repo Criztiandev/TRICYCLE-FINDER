@@ -25,10 +25,13 @@ class AccountService {
    * @param hits
    * @returns
    */
-  public getAccountCredentials = async (hits: FilterQuery<any>) => {
+  public getAccountCredentials = async (
+    hits: FilterQuery<any>,
+    select?: string
+  ) => {
     const credentials = await this.repository.fetchAccountByFilter(
       hits,
-      "-password"
+      select || "-password"
     );
     if (!credentials) throw new Error("Account doesnt exist");
     return credentials;

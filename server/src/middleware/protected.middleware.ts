@@ -47,7 +47,6 @@ class ProtectedMiddleware {
           .lean()
           .select("_id role");
 
-        console.log(credentials);
         if (!credentials) {
           res.status(401);
           throw new Error("User not found");

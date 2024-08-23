@@ -10,6 +10,7 @@ const bookingSchema = new mongoose.Schema(
     },
     pickupLocation: { type: String, required: true },
     dropoffLocation: { type: String, required: true },
+    status: { type: String, required: true, default: "pending" },
   },
   {
     timestamps: true,

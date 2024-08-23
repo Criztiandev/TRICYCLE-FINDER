@@ -1,7 +1,7 @@
 import { Router } from "express";
-import bookingRequest from "./booking-request.routes";
-
+import bookingRequestRoute from "./booking-request.routes";
 const router = Router();
-router.use("/booking", bookingRequest);
+
+router.use("/booking", bookingRequestRoute);
 
 export default router;

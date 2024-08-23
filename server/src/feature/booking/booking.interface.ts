@@ -15,6 +15,7 @@ export interface IBooking {
   bookingRequestID: string | ObjectId;
   pickupLocation: string;
   dropoffLocation: string;
+  status?: any;
 }
 
 export interface IBookingRequestBody

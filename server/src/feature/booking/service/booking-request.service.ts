@@ -1,5 +1,7 @@
+import { FilterQuery, ObjectId } from "mongoose";
 import { IBookingRequest } from "../booking.interface";
 import BookingRequestRepository from "../repository/booking-request.repository";
+import BookingService from "./booking.service";
 
 class BookingRequestService {
   private bookingRequestRepository: BookingRequestRepository;
@@ -31,12 +33,21 @@ class BookingRequestService {
     return this.bookingRequestRepository.fetchAllBookingRequestByHits(query);
   };
 
-  getBookingRequestDetails = async (senderID: string, hit: string) => {
+  getBookingRequestDetails = async (ownerID: string, hit: string) => {
     const existingBookingRequest =
       await this.bookingRequestRepository.fetchBookingRequestDetailsByHits({
-        $and: [{ senderID }, { status: "pending" }],
-        $or: [{ _id: hit }, { recipientID: hit }],
+        $and: [{ status: "pending" }, { isDeleted: false }],
+        $or: [{ _id: hit }, { senderID: hit }],
       });
+
+    return existingBookingRequest;
+  };
+
+  getBookingRequestByHits = async (hits: FilterQuery<IBookingRequest>) => {
+    const existingBookingRequest =
+      await this.bookingRequestRepository.fetchBookingRequestDetailsByHits(
+        hits
+      );
 
     return existingBookingRequest;
   };
@@ -61,14 +72,13 @@ class BookingRequestService {
     return this.bookingRequestRepository.create(payload);
   };
 
-  accept = async (senderID: string, bookingID: string) => {
+  accept = async (targetID: string, bookingID: ObjectId | string) => {
     await this.bookingRequestRepository.updateRequestById(
       {
-        $and: [{ recipientID: senderID }, { _id: bookingID }],
+        $and: [{ recipientID: targetID }, { _id: bookingID }],
       },
-      { status: "accepted" }
+      { status: "accepted", isDeleted: true }
     );
-
     return bookingID;
   };
 
@@ -76,19 +86,17 @@ class BookingRequestService {
     // Get all the sent booking requests for the user
     const bookingRequest = await this.getBookingRequestDetails(ownerID, hits);
 
-    console.log(hits);
-
-    if (!bookingRequest) throw new Error("Booking request doest exist");
-
     // delete the request
     const cancelResult = await this.bookingRequestRepository.deleteRequestById(
       hits
     );
     if (!cancelResult) throw new Error("Cancelation failed");
 
-    // delete also the booking
-
     return bookingRequest;
+  };
+
+  deleteRequest = async (hits: string) => {
+    return this.bookingRequestRepository.deleteRequestById(hits);
   };
 }
 

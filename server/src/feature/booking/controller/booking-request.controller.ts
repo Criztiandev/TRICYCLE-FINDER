@@ -13,7 +13,6 @@ class BookingRequest {
   private accountService: AccountService;
   private bookingService: BookingService;
   private bookingRequestService: BookingRequestService;
-
   constructor() {
     this.accountService = new AccountService();
     this.bookingService = new BookingService();
@@ -32,25 +31,6 @@ class BookingRequest {
 
     return existingAccount;
   }
-
-  public getAllBookingRequestOfRider = expressAsyncHandler(
-    async (req: Request, res: Response) => {
-      const { UID: selfID } = req.user;
-      await this.validateAccount(selfID);
-
-      // Get all the pending booking requests for the user
-      const bookingRequest =
-        await this.bookingRequestService.getAllBookingRequest(
-          selfID,
-          "pending"
-        );
-
-      res.status(200).json({
-        payload: bookingRequest,
-        message: "Fetched successfully",
-      });
-    }
-  );
 
   public getAllSentBookingRequestOfUser = expressAsyncHandler(
     async (req: Request, res: Response) => {
@@ -108,7 +88,7 @@ class BookingRequest {
 
   public acceptBookingRequest = expressAsyncHandler(
     async (req: Request, res: Response) => {
-      const { id: bookingID } = req.params;
+      const { id: targetID } = req.params;
       const { UID: selfID } = req.user;
       await this.validateAccount(selfID);
 
@@ -116,7 +96,7 @@ class BookingRequest {
       const bookingRequest =
         await this.bookingRequestService.getBookingRequestDetails(
           selfID,
-          bookingID
+          targetID
         );
 
       if (!bookingRequest) throw new Error("Booking request doest exist");
@@ -124,7 +104,7 @@ class BookingRequest {
       // accept the booking reuqes
       const acceptRequest = await this.bookingRequestService.accept(
         selfID,
-        bookingID
+        (bookingRequest as any)?._id
       );
 
       if (!acceptRequest)
@@ -187,6 +167,24 @@ class BookingRequest {
         cancelRequest?._id as any
       );
       if (!bookingResult) throw new Error("Deletion Failed");
+
+      res.status(200).json({
+        payload: hitID,
+        message: "Deleted successfully",
+      });
+    }
+  );
+
+  public completeBookingRequest = expressAsyncHandler(
+    async (req: Request, res: Response) => {
+      const { id: hitID } = req.params;
+      const { UID: selfID } = req.user;
+      await this.validateAccount(selfID);
+
+      const completeResult = await this.bookingService.done(selfID, hitID);
+
+      if (!completeResult)
+        throw new Error("Something went wrong, Please try again later");
 
       res.status(200).json({
         payload: hitID,

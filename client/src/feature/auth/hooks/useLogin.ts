@@ -5,7 +5,6 @@ import { LoginValidation } from "../validation/auth.validation";
 import { LoginResponse, LoginValue } from "../interface/sign-in.interface";
 
 import { useAuth } from "@/providers/AuthProvider";
-import useLocalStorage from "@/common/hooks/storage/useLocalStorage";
 import { PublicAxios } from "@/lib/axios/instances";
 import useMutate from "@/common/hooks/query/useMutate";
 import { AxiosResponse } from "axios";
@@ -25,14 +24,13 @@ const useLogin = () => {
       await PublicAxios.post("/auth/login", value),
     onSuccess: async (response: AxiosResponse<LoginResponse>) => {
       const { payload } = response.data;
+
       await storage.clear();
       await storage.setItem("accessToken", payload.accessToken);
       await storage.setItem("refreshToken", payload.refreshToken);
       await storage.setItem("auth", payload.user);
       setCredentials(payload.user);
     },
-
-    
   });
   return { form, mutation };
 };

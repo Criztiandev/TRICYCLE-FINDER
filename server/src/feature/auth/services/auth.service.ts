@@ -33,7 +33,7 @@ class AuthService {
       {
         $or: [{ email }, { phoneNumber: email }],
       },
-      "password"
+      "password role"
     );
 
     if (!existingUser) throw new Error("Account doe'st exist");

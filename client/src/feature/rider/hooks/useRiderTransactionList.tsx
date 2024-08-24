@@ -1,11 +1,13 @@
 import useFetch from "@/common/hooks/query/useFetch";
 import { ProtectedAxios } from "@/lib/axios/instances";
 
-const useRiderRequestList = () => {
+const useRiderTransactionList = () => {
   const query = useFetch({
-    queryKey: ["rider-request-list"],
+    queryKey: ["rider-transaction-list"],
     queryFn: async () => {
-      const { data: result } = await ProtectedAxios.get("booking/request/all");
+      const { data: result } = await ProtectedAxios.get(
+        "/rider/transaction/all"
+      );
 
       return result.payload;
     },
@@ -14,4 +16,4 @@ const useRiderRequestList = () => {
   return { ...query };
 };
 
-export default useRiderRequestList;
+export default useRiderTransactionList;

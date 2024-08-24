@@ -1,25 +1,19 @@
 import useMutate from "@/common/hooks/query/useMutate";
 import { ProtectedAxios } from "@/lib/axios/instances";
 import Toast from "react-native-toast-message";
-import { useRouter } from "expo-router";
 
-const useAcceptRequest = (id: string) => {
-  const router = useRouter();
+const useAcceptRequest = (userID: string, bookRequestID: string) => {
   const mutation = useMutate({
-    queryKey: `booking-details-${id}`,
-    mutationKey: [`booking-request-${id}`],
+    queryKey: `booking-user-details-${userID}`,
+    mutationKey: [`booking-request-${bookRequestID}`],
     mutationFn: async () =>
-      await ProtectedAxios.patch(`/booking/request/accept/${id}`),
+      await ProtectedAxios.patch(`/booking/request/accept/${bookRequestID}`),
 
     onSuccess: () => {
       Toast.show({
         type: "success",
         text1: "Booked Successfully",
       });
-    },
-
-    onError: () => {
-      router.back();
     },
   });
   return { mutation };

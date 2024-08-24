@@ -25,7 +25,7 @@ class BookingRequestService {
         {
           $and: [{ riderID: riderID }, { recipientID: userID }],
         },
-        "_id status"
+        "_id status bookingID"
       );
 
     return credentials;
@@ -42,30 +42,6 @@ class BookingRequestService {
 
   // OLD
 
-  getAllBookingRequest = async (
-    ownerID: string,
-    status: IBookingRequest["status"]
-  ) => {
-    const query = {
-      recipientID: ownerID,
-      ...(status && { status }), // Include status only if it's provided
-    };
-
-    return this.bookingRequestRepository.fetchAllBookingRequestByHits(query);
-  };
-
-  getAllBookingSentRequest = async (
-    ownerID: string,
-    status: IBookingRequest["status"]
-  ) => {
-    const query = {
-      senderID: ownerID,
-      ...(status && { status }), // Include status only if it's provided
-    };
-
-    return this.bookingRequestRepository.fetchAllBookingRequestByHits(query);
-  };
-
   getBookingRequestDetails = async (ownerID: string, hit: string) => {
     const existingBookingRequest =
       await this.bookingRequestRepository.fetchBookingRequestDetailsByHits({
@@ -76,16 +52,40 @@ class BookingRequestService {
     return existingBookingRequest;
   };
 
-  getBookingRequestByHits = async (hits: FilterQuery<IBookingRequest>) => {
+  getBookingRequestByHits = async (
+    hits: FilterQuery<IBookingRequest>,
+    select?: string
+  ) => {
     const existingBookingRequest =
       await this.bookingRequestRepository.fetchBookingRequestDetailsByHits(
-        hits
+        hits,
+        select || ""
       );
 
     return existingBookingRequest;
   };
 
   // New
+
+  getAllBookingRequest = async (ownerID: string, status: string) => {
+    const credentials =
+      await this.bookingRequestRepository.fetchAllBookingRequestByHits({
+        $and: [{ riderID: ownerID }, { status: "pending" }],
+      });
+
+    return credentials;
+  };
+
+  getAllTransactions = async (ownerID: string) => {
+    // check if there is active session
+    // if not get all the current transaction of the rider
+
+    const transactions = await this.bookingRequestRepository.getAllByHits({
+      $and: [{ riderID: ownerID }, { status: "done" }],
+    });
+
+    return transactions;
+  };
 
   /**
    * This function create a booking request and booking

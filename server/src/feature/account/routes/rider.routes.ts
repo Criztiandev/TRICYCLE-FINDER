@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.get("/all", riderController.fetchAllRider);
 router.get("/all/:status", riderController.fetchAllRiderByStatus);
-router.get("/request/all", riderController.fetchAllRiderBookingRequest);
 
+router.get("/transaction/all", riderController.getAllTransactions);
 export default router;

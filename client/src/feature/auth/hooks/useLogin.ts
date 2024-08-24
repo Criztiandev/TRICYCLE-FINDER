@@ -9,12 +9,16 @@ import { PublicAxios } from "@/lib/axios/instances";
 import useMutate from "@/common/hooks/query/useMutate";
 import { AxiosResponse } from "axios";
 import useAuthStorage from "@/common/hooks/storage/useAuthStorage";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 
 const useLogin = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { setCredentials } = useAuth();
   const storage = useAuthStorage();
   const form = useForm<LoginValue>({
-    defaultValues: { email: "criztiandev@gmail.com", password: "password" },
+    defaultValues: { email: "johnmichael@gmail.com", password: "password" },
     resolver: zodResolver(LoginValidation),
   });
 
@@ -25,10 +29,14 @@ const useLogin = () => {
     onSuccess: async (response: AxiosResponse<LoginResponse>) => {
       const { payload } = response.data;
 
+      queryClient.clear();
+      setCredentials(null);
+
       await storage.clear();
       await storage.setItem("accessToken", payload.accessToken);
       await storage.setItem("refreshToken", payload.refreshToken);
       await storage.setItem("auth", payload.user);
+
       setCredentials(payload.user);
     },
   });

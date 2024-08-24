@@ -42,6 +42,7 @@ class BookingController {
         return res.status(200).json({
           payload: {
             riderID: null,
+            recipientID: null,
           },
         });
       }

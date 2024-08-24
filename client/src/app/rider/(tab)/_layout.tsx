@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { Disc, Home, Search, UserCircle } from "lucide-react-native";
+import { Disc, File, Home, Search, UserCircle } from "lucide-react-native";
 
 const RootLayout = () => {
   return (
@@ -14,22 +14,13 @@ const RootLayout = () => {
           ),
         }}
       />
-      <Tabs.Screen
-        name="task"
-        options={{
-          title: "Tasks",
-          tabBarIcon: (props) => (
-            <UserCircle color={props.focused ? "black" : props.color} />
-          ),
-        }}
-      />
 
       <Tabs.Screen
         name="transaction"
         options={{
-          title: "History",
+          title: "Transaction",
           tabBarIcon: (props) => (
-            <UserCircle color={props.focused ? "black" : props.color} />
+            <File color={props.focused ? "black" : props.color} />
           ),
         }}
       />

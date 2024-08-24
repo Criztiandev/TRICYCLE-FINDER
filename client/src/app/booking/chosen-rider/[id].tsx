@@ -18,6 +18,8 @@ import useBookingRequest from "@/feature/booking/hooks/useBookingRequest";
 import useRiderDetails from "@/feature/rider/hooks/useRiderDetails";
 import { io } from "socket.io-client";
 import Toast from "react-native-toast-message";
+import { useAuth } from "@/providers/AuthProvider";
+import useLocalStorage from "@/common/hooks/storage/useLocalStorage";
 
 interface Props extends IAccount {
   status?: string;
@@ -38,6 +40,7 @@ interface MessageButtonProps {
 const SOCKET_URL = "http://192.168.1.6:4000";
 
 const RootScreen = () => {
+  const { user } = useAuth();
   const router = useRouter();
   const { id } = useLocalSearchParams();
 
@@ -49,12 +52,13 @@ const RootScreen = () => {
   useEffect(() => {
     const socket = io(SOCKET_URL);
 
-    socket.on("booking-accepted", (acceptedID) => {
-      if (acceptedID === data?._id) {
-        router.replace(`/booking/user-session/${id}` as Href<string>);
+    socket.on("booking-accepted", (payload) => {
+      const { bookingID, role } = payload;
+      if (bookingID === data?._id && role === "user") {
+        router.navigate(`/booking/user-session/${id}` as Href<string>);
       }
     });
-  }, [data]);
+  }, [data, user]);
 
   /**
    * This effect handle the state of the status so It could redirect to the proper screen
@@ -68,7 +72,7 @@ const RootScreen = () => {
         }`,
         text2: "Thank you for your patience",
       });
-      router.replace(`/booking/user-session/${id}`);
+      router.navigate(`/booking/user-session/${id}`);
     }
 
     if (data?.status === "done") {
@@ -77,7 +81,7 @@ const RootScreen = () => {
         text1: "Booking is already done",
         text2: "Thank you for using the app",
       });
-      router.replace(`/`);
+      router.navigate(`/`);
     }
   }, [data]);
 
@@ -85,7 +89,6 @@ const RootScreen = () => {
   if (isError) {
     return <ErrorScreen error={error} />;
   }
-
   return (
     <>
       <DetailsHeader />
@@ -120,7 +123,7 @@ const DetailsHeader: React.FC = () => {
       options={{
         title: "Account Details",
         headerLeft: () => (
-          <TouchableOpacity className="mr-4" onPress={() => router.back()}>
+          <TouchableOpacity className="mr-4" onPress={() => router.push("/")}>
             <ArrowLeft color="black" />
           </TouchableOpacity>
         ),

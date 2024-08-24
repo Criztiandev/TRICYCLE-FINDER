@@ -19,6 +19,7 @@ import useRiderDetails from "@/feature/rider/hooks/useRiderDetails";
 import { io } from "socket.io-client";
 import useRateRider from "@/feature/rider/hooks/useRiderRating";
 import SelectField from "@/common/components/form/SelectField";
+import { useAuth } from "@/providers/AuthProvider";
 
 interface Props extends IAccount {
   status?: string;
@@ -40,8 +41,9 @@ const RootScreen = () => {
   useEffect(() => {
     const socket = io(SOCKET_URL);
 
-    socket.on("booking-done", (acceptedID) => {
-      if (acceptedID === data?._id) {
+    socket.on("booking-done", (payload) => {
+      const { bookingID, role } = payload;
+      if (bookingID === data?._id && role === "user") {
         router.replace(`booking/rating/${id}` as Href<string>);
       }
     });

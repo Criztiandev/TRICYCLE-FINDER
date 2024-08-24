@@ -5,7 +5,7 @@ import BookingService from "../../booking/service/booking.service";
 import BookingRequestService from "../../booking/service/booking-request.service";
 import BookingRepository from "../../booking/repository/booking.repository";
 
-class AccountController {
+class UserController {
   private service: AccountService;
   private bookingRequestService: BookingRequestService;
   private bookingRepository: BookingRepository;
@@ -67,4 +67,4 @@ class AccountController {
   });
 }
 
-export default new AccountController();
+export default new UserController();

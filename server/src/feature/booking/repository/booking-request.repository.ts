@@ -28,18 +28,10 @@ class BookingRequestRepository {
     hits: FilterQuery<IBookingRequest>,
     select?: string
   ) => {
-    return this.model
-      .find(hits)
-      .lean()
-      .select(select || "")
-      .populate({
-        path: "senderID",
-        select: "firstName lastName",
-      })
-      .populate({
-        path: "recipientID",
-        select: "firstName lastName",
-      });
+    return this.model.find(hits).lean().populate({
+      path: "recipientID",
+      select: "firstName lastName phoneNumber",
+    });
   };
 
   /**
@@ -92,7 +84,7 @@ class BookingRequestRepository {
     return this.model
       .find(hits)
       .lean()
-      .select(select || {});
+      .select(select || "");
   };
 
   public create = async (payload: IBookingRequest) => {

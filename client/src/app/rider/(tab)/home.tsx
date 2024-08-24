@@ -4,53 +4,51 @@ import { FlashList } from "@shopify/flash-list";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
 import { MessageCircle } from "lucide-react-native";
-import { TouchableOpacity } from "react-native";
-import Input from "@/common/components/ui/Input";
-import AccountBlob from "@/feature/account/component/AccountBlob";
+import useRiderRequestList from "@/feature/rider/hooks/useRiderRequestList";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
-import useRiderRequestList from "@/feature/rider/hooks/useRiderRequestList";
-import { useEffect } from "react";
+import AccountBlob from "@/feature/account/component/AccountBlob";
+import { TouchableOpacity } from "react-native";
+import useBookingRequest from "@/feature/booking/hooks/useBookingRequest";
 import useBookingSession from "@/feature/booking/hooks/useBookingSession";
+import { useEffect } from "react";
 
 const RootScreen = () => {
-  const { data, isLoading, isError, error } = useRiderRequestList();
+  const router = useRouter();
+  const { data: requestList, isLoading, isError } = useRiderRequestList();
   const {
     data: sessionData,
     isLoading: sessionLoading,
     isError: sessionError,
-    error: sessionErrors,
-  } = useBookingSession();
-  const router = useRouter();
+  } = useBookingSession("rider");
+
+  useEffect(() => {
+    if (sessionData?.recipientID) {
+      router.push(
+        `/booking/chosen-user/${sessionData?.recipientID}` as Href<string>
+      );
+    }
+  }, [sessionData]);
 
   if (isLoading || sessionLoading) return <LoadingScreen />;
   if (isError || sessionError) return <ErrorScreen />;
-
-  console.log(sessionErrors);
 
   return (
     <>
       <HomeScreenHeader />
       <ScreenBaseLayout>
-        <TouchableOpacity className="w-full px-4">
-          <Input
-            placeholder="Whats is in your mind ?"
-            className="rounded-full px-3"
-            disabled
-          />
-        </TouchableOpacity>
         <FlashList
-          data={data}
+          data={requestList?.reverse()}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }: { item: any }) => (
             <TouchableOpacity
               onPress={() =>
-                router.navigate(
-                  `/booking/chosen-rider/${item.id}` as Href<string>
+                router.push(
+                  `/booking/chosen-user/${item?.recipientID?._id}` as Href<string>
                 )
               }
             >
-              <AccountBlob {...item.senderID} />
+              <AccountBlob {...item?.recipientID} />
             </TouchableOpacity>
           )}
           estimatedItemSize={100}

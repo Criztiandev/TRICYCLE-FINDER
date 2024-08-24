@@ -17,7 +17,7 @@ const AccountInfoStep = () => {
         type="tel"
         label="Contact"
         name="phoneNumber"
-        placeholder="Enter your Phone Numberr"
+        placeholder="Enter your Phone Number"
       />
 
       <InputField

@@ -4,15 +4,18 @@ import RiderService from "../services/rider.service";
 import { IAccount } from "../interface/accounter.interface";
 import AccountService from "../services/account.service";
 import BookingRequestService from "../../booking/service/booking-request.service";
+import BookingService from "../../booking/service/booking.service";
 
 class RiderController {
   private service: RiderService;
   private accountService: AccountService;
   private bookingRequestService: BookingRequestService;
+  private bookingService: BookingService;
   constructor() {
     this.service = new RiderService();
     this.accountService = new AccountService();
     this.bookingRequestService = new BookingRequestService();
+    this.bookingService = new BookingService();
   }
 
   fetchAllRider = expressAsyncHandler(async (req: Request, res: Response) => {
@@ -43,23 +46,14 @@ class RiderController {
     }
   );
 
-  public fetchAllRiderBookingRequest = expressAsyncHandler(
+  public getAllTransactions = expressAsyncHandler(
     async (req: Request, res: Response) => {
-      const { UID: selfID } = req.user;
-      const existingAccount = await this.accountService.isAccountExist({
-        _id: selfID,
-      });
+      const { UID } = req.user;
 
-      if (!existingAccount) throw new Error("Account doesnt exist");
-      // Get all the pending booking requests for the user
-      const bookingRequest =
-        await this.bookingRequestService.getAllBookingRequest(
-          selfID,
-          "pending"
-        );
+      const transaction = await this.bookingService.getAllTransactions(UID);
 
       res.status(200).json({
-        payload: bookingRequest,
+        payload: transaction,
         message: "Fetched successfully",
       });
     }

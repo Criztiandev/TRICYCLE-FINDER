@@ -5,54 +5,53 @@ import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
 import { MessageCircle } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
-import Input from "@/common/components/ui/Input";
 import AccountBlob from "@/feature/account/component/AccountBlob";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import { IAccount } from "@/feature/account/interface/account.interface";
 import useRiderList from "@/feature/rider/hooks/useRiderList";
 import useBookingSession from "@/feature/booking/hooks/useBookingSession";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 
 const RootScreen = () => {
-  const { data, isLoading, isError, error } = useRiderList();
+  const {
+    data: riders,
+    isLoading: ridersLoading,
+    isError: ridersError,
+  } = useRiderList();
   const {
     data: sessionData,
     isLoading: sessionLoading,
     isError: sessionError,
-  } = useBookingSession();
+  } = useBookingSession("user");
   const router = useRouter();
 
   useEffect(() => {
     if (sessionData?.riderID) {
-      router.replace(`/booking/user-session/${sessionData?.riderID}`);
+      router.push(`/booking/user-session/${sessionData.riderID}`);
     }
-  }, [sessionData]);
+  }, [sessionData, router]);
 
-  if (isLoading || sessionLoading) return <LoadingScreen />;
-  if (isError || sessionError) return <ErrorScreen />;
+  const handleRiderPress = useCallback(
+    (riderId: string) => {
+      router.navigate(`/booking/chosen-rider/${riderId}` as Href<string>);
+    },
+    [router]
+  );
+
+  if (ridersLoading || sessionLoading) return <LoadingScreen />;
+  if (ridersError || sessionError) return <ErrorScreen />;
 
   return (
     <>
       <HomeScreenHeader />
       <ScreenBaseLayout>
-        <TouchableOpacity className="w-full px-4">
-          <Input
-            placeholder="Whats is in your mind ?"
-            className="rounded-full px-3"
-            disabled
-          />
-        </TouchableOpacity>
         <FlashList
-          data={data}
+          data={riders?.reverse()}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }: { item: IAccount }) => (
             <TouchableOpacity
-              onPress={() =>
-                router.navigate(
-                  `/booking/chosen-rider/${item._id}` as Href<string>
-                )
-              }
+              onPress={() => handleRiderPress(item._id as string)}
             >
               <AccountBlob {...item} />
             </TouchableOpacity>
@@ -64,36 +63,26 @@ const RootScreen = () => {
   );
 };
 
-export default RootScreen;
-
-/**
- * Home Tab Header
- * @purpose - to display the Title, Message and Create Post
- */
-
 const HomeScreenHeader = () => {
   const router = useRouter();
 
+  const handleMessagePress = useCallback(() => {
+    router.push("/user/conversation/list" as Href<string>);
+  }, [router]);
+
   return (
-    <>
-      <Stack.Screen
-        options={{
-          headerRight: () => (
-            <XStack>
-              {/* Message Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onPress={() =>
-                  router.push("/user/conversation/list" as Href<string>)
-                }
-              >
-                <MessageCircle color="black" />
-              </Button>
-            </XStack>
-          ),
-        }}
-      />
-    </>
+    <Stack.Screen
+      options={{
+        headerRight: () => (
+          <XStack>
+            <Button variant="ghost" size="icon" onPress={handleMessagePress}>
+              <MessageCircle color="black" />
+            </Button>
+          </XStack>
+        ),
+      }}
+    />
   );
 };
+
+export default RootScreen;

@@ -20,6 +20,51 @@ class BookingRequest {
     this.bookingRequestService = new BookingRequestService();
   }
 
+  public getUserRequest = expressAsyncHandler(
+    async (req: Request, res: Response) => {
+      const { id: userID } = req.params;
+      const { UID: riderID } = req.user;
+
+      const credentials = await this.accountService.getDetails(userID);
+      if (!credentials) throw new Error("Account doesnt exist");
+
+      const bookingRequest =
+        await this.bookingRequestService.getRequestByRiderID(userID, riderID);
+      if (!bookingRequest) throw new Error("Booking Request doesnt exist");
+
+      const booking = await this.bookingService.getDetails(
+        bookingRequest?.bookingID as any,
+        "dropoffLocation pickupLocation status"
+      );
+
+      res.status(200).json({
+        payload: {
+          ...credentials,
+          ...booking,
+          _id: bookingRequest?._id,
+          status: bookingRequest?.status,
+        },
+      });
+    }
+  );
+
+  public getAllRequest = expressAsyncHandler(
+    async (req: Request, res: Response) => {
+      const { UID } = req.user;
+
+      // get all the request that is related to rider
+      const credentials = await this.bookingRequestService.getAllBookingRequest(
+        UID,
+        "pending"
+      );
+      if (!credentials) throw new Error("Request doesnt found");
+
+      res.status(200).json({
+        payload: credentials,
+      });
+    }
+  );
+
   public createBooking = expressAsyncHandler(
     async (req: Request, res: Response) => {
       const { id: riderID } = req.params;
@@ -88,7 +133,7 @@ class BookingRequest {
   public acceptBooking = expressAsyncHandler(
     async (req: Request, res: Response) => {
       const { id: bookingRequestID } = req.params;
-      const { UID } = req.user;
+      const { UID, role } = req.user;
 
       // check if there is already existing on the current id
       const request = await this.bookingRequestService.getRequestByID(
@@ -105,7 +150,11 @@ class BookingRequest {
 
       if (!acceptRequest) throw new Error("Failed to Accept");
 
-      io.emit("booking-accepted", bookingRequestID);
+      const payload = {
+        bookingID: bookingRequestID,
+        role,
+      };
+      io.emit("booking-accepted", payload);
 
       res.status(200).json({
         payload: UID,
@@ -117,7 +166,7 @@ class BookingRequest {
   public doneBooking = expressAsyncHandler(
     async (req: Request, res: Response) => {
       const { id: bookingRequestID } = req.params;
-      const { UID } = req.user;
+      const { UID, role } = req.user;
 
       // check if there is already existing on the current id
       const request = await this.bookingRequestService.getRequestByID(
@@ -134,7 +183,12 @@ class BookingRequest {
 
       if (!doneBooking) throw new Error("Failed to Done");
 
-      io.emit("booking-done", bookingRequestID);
+      const payload = {
+        bookingID: bookingRequestID,
+        role,
+      };
+
+      io.emit("booking-done", payload);
 
       res.status(200).json({
         payload: UID,

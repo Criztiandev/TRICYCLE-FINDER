@@ -9,4 +9,7 @@ router.patch("/cancel/:id", bookingRequestController.cancelBooking);
 router.patch("/accept/:id", bookingRequestController.acceptBooking);
 router.patch("/done/:id", bookingRequestController.doneBooking);
 
+router.get("/all", bookingRequestController.getAllRequest);
+router.get("/user/details/:id", bookingRequestController.getUserRequest);
+
 export default router;

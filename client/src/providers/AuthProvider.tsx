@@ -41,7 +41,10 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      router.replace(routeMap[user.role] as Href<string>);
+      if (user.role in routeMap) {
+        router.replace(routeMap[user.role] as Href<string>);
+      } else {
+      }
     }
   }, [user, router]);
 

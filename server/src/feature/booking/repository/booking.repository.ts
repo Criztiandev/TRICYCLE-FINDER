@@ -25,6 +25,34 @@ class BookingRepository {
       .lean();
   };
 
+  public getAllByHits = async (
+    hits: FilterQuery<IBooking>,
+    select?: string
+  ) => {
+    return this.model
+      .find(hits)
+      .lean()
+      .select(select || "")
+      .populate({
+        path: "recipientID",
+        select: "firstName lastName phoneNumber email",
+      });
+  };
+
+  public getAllByHitsButPopulated = async (
+    hits: FilterQuery<IBooking>,
+    select?: string
+  ) => {
+    return this.model
+      .find(hits)
+      .lean()
+      .select(select || "")
+      .populate({
+        path: "recipientID",
+        select: "firstName lastName phoneNumber email",
+      });
+  };
+
   public create = async (payload: IBooking) => {
     return await this.model.create(payload);
   };

@@ -1,9 +1,9 @@
 import useFetch from "@/common/hooks/query/useFetch";
 import { ProtectedAxios } from "@/lib/axios/instances";
 
-const useBookingSession = () => {
+const useBookingSession = (key: string) => {
   return useFetch({
-    queryKey: [`rider-details-`],
+    queryKey: [`booking-sessions-${key}`],
     queryFn: async () => {
       const { data } = await ProtectedAxios.get(`/booking/session`);
       const { payload } = data;

@@ -7,7 +7,7 @@ import ErrorScreen from "@/layout/screen/ErrorScreen";
 import { useAuth } from "@/providers/AuthProvider";
 import { ArrowLeft } from "lucide-react-native";
 import AccountDetails from "@/feature/account/component/AccountDetails";
-import BookingDetails from "@/feature/account/component/BookingDetails";
+import BookingRequestDetails from "@/feature/account/component/BookingRequestDetails";
 
 const RootScreen = () => {
   const { id } = useLocalSearchParams();
@@ -22,7 +22,7 @@ const RootScreen = () => {
     <>
       <DetailsHeader />
       <View className="bg-white flex-1 p-4">
-        <BookingDetails {...data} />
+        <BookingRequestDetails {...data} />
       </View>
     </>
   );

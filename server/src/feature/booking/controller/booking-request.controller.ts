@@ -52,6 +52,8 @@ class BookingRequest {
     async (req: Request, res: Response) => {
       const { UID } = req.user;
 
+      // check if there an active booking registered to the user
+
       // get all the request that is related to rider
       const credentials = await this.bookingRequestService.getAllBookingRequest(
         UID,

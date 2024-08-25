@@ -75,7 +75,7 @@ const RootScreen = () => {
 
               <XStack className="w-full justify-between items-center">
                 <Text className="text-base">Dropoff Location:</Text>
-                <Text className="text-base">{data?.pickupLocation}</Text>
+                <Text className="text-base">{data?.dropoffLocation}</Text>
               </XStack>
             </YStack>
           </View>

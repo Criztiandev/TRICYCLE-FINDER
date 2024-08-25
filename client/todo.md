@@ -21,3 +21,6 @@
 23. copy al the hooks here
 
 There is no badge component
+
+1. back in the rider booking
+2. Back in message. cancel booking and add bookng

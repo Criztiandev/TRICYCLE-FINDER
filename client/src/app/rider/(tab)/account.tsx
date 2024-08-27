@@ -8,6 +8,7 @@ import LoadingScreen from "@/layout/screen/LoadingScreen";
 import useProfile from "@/feature/account/hooks/useProfile";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import ProfileDetails from "@/feature/account/component/ProfileDetails";
+import { View } from "react-native";
 
 const RootScreen = () => {
   const { data, isLoading, isError, error } = useProfile();
@@ -18,7 +19,9 @@ const RootScreen = () => {
     <>
       <AccountHeader />
       <ScreenBaseLayout>
+        <View className="p-16">
         <ProfileDetails {...data} />
+        </View>
       </ScreenBaseLayout>
     </>
   );

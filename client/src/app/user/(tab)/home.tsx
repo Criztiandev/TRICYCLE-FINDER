@@ -3,8 +3,8 @@ import ScreenBaseLayout from "@/layout/ScreenBaseLayout";
 import { FlashList } from "@shopify/flash-list";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
-import { MessageCircle } from "lucide-react-native";
-import { TouchableOpacity } from "react-native";
+import { Box, MessageCircle } from "lucide-react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import AccountBlob from "@/feature/account/component/AccountBlob";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
@@ -46,18 +46,27 @@ const RootScreen = () => {
     <>
       <HomeScreenHeader />
       <ScreenBaseLayout>
-        <FlashList
-          data={riders?.reverse()}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }: { item: IAccount }) => (
-            <TouchableOpacity
-              onPress={() => handleRiderPress(item._id as string)}
-            >
-              <AccountBlob {...item} />
-            </TouchableOpacity>
-          )}
-          estimatedItemSize={100}
-        />
+       <View className="flex-1 pb-24">
+       {riders?.length > 0 ? (
+          <FlashList
+            data={riders?.reverse()}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }: { item: IAccount }) => (
+              <TouchableOpacity
+                onPress={() => handleRiderPress(item._id as string)}
+              >
+                <AccountBlob {...item} />
+              </TouchableOpacity>
+            )}
+            estimatedItemSize={100}
+          />
+        ) : (
+          <View className="flex-1 justify-center items-center space-y-2">
+            <Box color="black" size={64} />
+            <Text className="text-2xl font-bold">The is no available rider</Text>
+          </View>
+        )}
+       </View>
       </ScreenBaseLayout>
     </>
   );
@@ -73,10 +82,11 @@ const HomeScreenHeader = () => {
   return (
     <Stack.Screen
       options={{
+    
         headerRight: () => (
           <XStack>
             <Button variant="ghost" size="icon" onPress={handleMessagePress}>
-              <MessageCircle color="black" />
+              <MessageCircle color="white" fill="white" />
             </Button>
           </XStack>
         ),

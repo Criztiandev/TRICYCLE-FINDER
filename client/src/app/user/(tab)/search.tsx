@@ -2,7 +2,7 @@ import { Href, Stack, useRouter } from "expo-router";
 import ScreenBaseLayout from "@/layout/ScreenBaseLayout";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
-import { MessageCircle } from "lucide-react-native";
+import { MessageCircle, Search } from "lucide-react-native";
 import { View } from "react-native";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
@@ -50,6 +50,7 @@ const RootScreen = () => {
       <HomeScreenHeader />
       <ScreenBaseLayout className="flex-1">
         <View className="flex justify-center items-center flex-1">
+          <Search color="black" size="48" className="mb-4" />
           <Button onPress={handleRandomSearch}>Search Rider</Button>
         </View>
       </ScreenBaseLayout>
@@ -88,7 +89,7 @@ const HomeScreenHeader = () => {
                   router.push("/user/conversation/list" as Href<string>)
                 }
               >
-                <MessageCircle color="black" />
+                <MessageCircle color="white" fill="white" />
               </Button>
             </XStack>
           ),

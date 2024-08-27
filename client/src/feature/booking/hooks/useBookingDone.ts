@@ -19,7 +19,7 @@ const useBookingDone = (userID: string, bookingID: string) => {
         text1: "Book is done",
       });
       queryClient.clear();
-      router.replace("/");
+      router.replace("/rider/home");
     },
   });
   return { mutation };

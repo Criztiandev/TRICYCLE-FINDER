@@ -3,7 +3,12 @@ import { Stack } from "expo-router";
 
 const RootScreen = () => {
   return (
-    <Stack>
+    <Stack screenOptions={{
+      headerStyle: {
+        backgroundColor: "#EA2027",
+      },
+      headerTintColor:"white"
+    }}>
       <Stack.Screen
         name="details/[id]"
         options={{ title: "Account Details" }}

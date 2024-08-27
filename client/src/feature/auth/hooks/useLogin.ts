@@ -18,7 +18,7 @@ const useLogin = () => {
   const { setCredentials } = useAuth();
   const storage = useAuthStorage();
   const form = useForm<LoginValue>({
-    defaultValues: { email: "johnmichael@gmail.com", password: "password" },
+    defaultValues: { email: "", password: "" },
     resolver: zodResolver(LoginValidation),
   });
 

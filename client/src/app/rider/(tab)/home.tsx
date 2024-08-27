@@ -3,12 +3,12 @@ import ScreenBaseLayout from "@/layout/ScreenBaseLayout";
 import { FlashList } from "@shopify/flash-list";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
-import { MessageCircle } from "lucide-react-native";
+import { Book, MessageCircle } from "lucide-react-native";
 import useRiderRequestList from "@/feature/rider/hooks/useRiderRequestList";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import AccountBlob from "@/feature/account/component/AccountBlob";
-import { TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import useBookingRequest from "@/feature/booking/hooks/useBookingRequest";
 import useBookingSession from "@/feature/booking/hooks/useBookingSession";
 import { useEffect } from "react";
@@ -37,7 +37,8 @@ const RootScreen = () => {
     <>
       <HomeScreenHeader />
       <ScreenBaseLayout>
-        <FlashList
+       <>
+       {requestList?.length > 0 ?   <FlashList
           data={requestList?.reverse()}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }: { item: any }) => (
@@ -52,7 +53,11 @@ const RootScreen = () => {
             </TouchableOpacity>
           )}
           estimatedItemSize={100}
-        />
+        /> :  <View className="flex-1 justify-center items-center space-y-2">
+        <Book color="black" size={64} />
+        <Text className="text-2xl font-bold">The is no available request</Text>
+      </View>}
+       </>
       </ScreenBaseLayout>
     </>
   );

@@ -3,22 +3,27 @@ import React, { FC, useState } from "react";
 import { Image, ImageProps } from "expo-image";
 import { cn } from "@/lib/utils";
 
+// Import the image correctly for React Native
+import RiderAvatar from "@/assets/images/rider-avatar.jpg";
+
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
-interface Props extends ImageProps {
+interface Props extends Omit<ImageProps, 'source'> {
   fallback?: string;
   imageClass?: string;
   size?: number;
+  source?: any; // Allow any type for source
 }
 
 const Avatar: FC<Props> = ({
   fallback,
-  source = "https://picsum.photos/seed/696/3000/2000",
+  source = RiderAvatar, // Use the imported image as default
   size = 64,
   ...props
 }) => {
   const [imageFailed, setImageFailed] = useState(false);
+  
   return (
     <View
       className={cn(
@@ -26,18 +31,17 @@ const Avatar: FC<Props> = ({
         props.className
       )}
       style={{ width: size, height: size }}
-      {...props}
     >
       {imageFailed ? (
         <View className="w-full h-full justify-center items-center bg-slate-200">
-          <Text className="text-xl font-bold ">T</Text>
+          <Text className="text-xl font-bold ">{fallback || "T"}</Text>
         </View>
       ) : (
         <Image
           {...props}
           source={source}
           className={cn("flex-1 w-full bg-[#0553]", props.imageClass)}
-          placeholder={{ blurhash }}
+          placeholder={blurhash}
           contentFit="cover"
           transition={1000}
           onError={() => setImageFailed(true)}

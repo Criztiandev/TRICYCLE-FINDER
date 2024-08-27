@@ -6,7 +6,7 @@ import { IAccount } from "../interface/account.interface";
 
 const AccountBlob = (props: IAccount) => {
   return (
-    <View className="p-4 flex-row space-x-4 items-center">
+    <View className="p-4 flex-row space-x-4 items-center ">
       <Avatar />
 
       <YStack>

@@ -7,17 +7,17 @@ import {
 } from "./interceptors";
 
 export const AxiosInstance = axios.create({
-  baseURL: "http://192.168.1.6:4000/api",
+  baseURL: "http://192.168.1.11:4000/api",
   withCredentials: true,
 });
 
 export const PublicAxios = axios.create({
-  baseURL: "http://192.168.1.6:4000/api",
+  baseURL: "http://192.168.1.11:4000/api",
   withCredentials: true,
 });
 
 export const ProtectedAxios = axios.create({
-  baseURL: "http://192.168.1.6:4000/api",
+  baseURL: "http://192.168.1.11:4000/api",
   withCredentials: true,
 });
 

@@ -3,11 +3,12 @@ import ScreenBaseLayout from "@/layout/ScreenBaseLayout";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
 import { Settings, Users } from "lucide-react-native";
-import AccountDetails from "@/feature/account/component/AccountDetails";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import useProfile from "@/feature/account/hooks/useProfile";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import ProfileDetails from "@/feature/account/component/ProfileDetails";
+import { Text, View } from "react-native";
+import YStack from "@/common/components/stacks/YStack";
 
 const RootScreen = () => {
   const { data, isLoading, isError, error } = useProfile();
@@ -18,7 +19,13 @@ const RootScreen = () => {
     <>
       <AccountHeader />
       <ScreenBaseLayout>
-        <ProfileDetails {...data} />
+        <View className="p-4">
+          <ProfileDetails {...data} />
+
+          <YStack>
+            <Text className="text-lg my-4">Recent Transactions</Text>
+          </YStack>
+        </View>
       </ScreenBaseLayout>
     </>
   );
@@ -40,7 +47,7 @@ const AccountHeader = () => {
                 size="icon"
                 onPress={() => router.navigate("/account/settings")}
               >
-                <Settings color="black" />
+                <Settings color="white" fill="white" />
               </Button>
             </XStack>
           ),

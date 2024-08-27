@@ -65,7 +65,7 @@ const ConversationHeader: React.FC<{
         title: recipientName,
         headerLeft: () => (
           <TouchableOpacity onPress={() => router.back()} className="p-2 mr-4">
-            <ArrowLeft color="black" />
+            <ArrowLeft color="white" />
           </TouchableOpacity>
         ),
 
@@ -76,7 +76,7 @@ const ConversationHeader: React.FC<{
               Linking.openURL(`tel:${recipientNumber || "094828828383"} `)
             }
           >
-            <PhoneCall color="black" />
+            <PhoneCall color="white" />
           </Button>
         ),
       }}

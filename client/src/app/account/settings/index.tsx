@@ -21,7 +21,7 @@ const RootScreen = () => {
     <>
       <SettingHeader />
       <ScreenBaseLayout>
-        <YStack className="space-y-2">
+        <YStack className="space-y-2 p-4">
           <Button variant="ghost" textClassName="text-black">
             FAQ
           </Button>
@@ -69,7 +69,7 @@ const SettingHeader = () => {
                 size="icon"
                 onPress={() => router.push("/account/settings")}
               >
-                <Settings color="black" />
+                <Settings color="white" />
               </Button>
             </XStack>
           ),

@@ -47,6 +47,8 @@ function useMutate<TData, TVariables>({
     },
 
     onError: (error: AxiosError) => {
+
+      console.log(JSON.stringify(error,null,2))
       if (error instanceof AxiosError && error.response) {
         const { error: errorMessage } = error.response.data as any;
 

@@ -4,6 +4,7 @@ import YStack from "@/common/components/stacks/YStack";
 import Avatar from "@/common/components/ui/Avatar";
 import XStack from "@/common/components/stacks/XStack";
 import { IAccount } from "../interface/account.interface";
+import UserAvatar from "@/common/components/ui/UserAvatar";
 
 interface Props extends IAccount {
   status?: string;
@@ -24,7 +25,7 @@ const ProfileDetails: FC<Props> = ({
     <View className="relative">
       <View className="  rounded-[5px] justify-center items-center"></View>
       <YStack className="justify-center items-center space-y-4">
-        <Avatar size={150} />
+      {props.role === "user"? <UserAvatar size={150} /> :   <Avatar size={150} />}
         {/* Full Name */}
         <YStack className="justify-center justify-items-center">
           <Text className="text-2xl font-medium">

@@ -5,7 +5,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 const RootLayout = () => {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack >
       <Stack.Screen name="(tab)" />
       <Stack.Screen name="conversation" />
       <Stack.Screen name="details/[id]" />

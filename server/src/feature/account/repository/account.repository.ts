@@ -24,8 +24,10 @@ class AccountRepository {
   };
 
   public fetchAccountById = async (id: ObjectId | string, select?: string) => {
-    return this.model
-      .findById(id)
+
+
+    return await this.model
+      .findOne({_id:id})
       .lean()
       .select(select || "");
   };

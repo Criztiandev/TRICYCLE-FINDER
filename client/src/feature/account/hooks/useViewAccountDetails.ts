@@ -1,15 +1,15 @@
 import { ProtectedAxios } from "@/lib/axios/instances";
 import useFetch from "@/common/hooks/query/useFetch";
 
-const useAccountDetails = (id?: string) => {
+const useViewAccountDetails = (id?: string) => {
   return useFetch({
-    queryKey: [`account-details-${id}`],
+    queryKey: [`account-view-details-${id}`],
     queryFn: async () => {
-      const { data } = await ProtectedAxios.get(`/account/details/${id}`);
+      const { data } = await ProtectedAxios.get(`/account/details/view/${id}`);
       const { payload } = data;
       return payload;
     },
   });
 };
 
-export default useAccountDetails;
+export default useViewAccountDetails;

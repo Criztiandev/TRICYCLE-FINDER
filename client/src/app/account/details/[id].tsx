@@ -5,7 +5,7 @@ import useAccountDetails from "@/feature/account/hooks/useAccountDetails";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import { useAuth } from "@/providers/AuthProvider";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, DollarSign } from "lucide-react-native";
 import AccountDetails from "@/feature/account/component/AccountDetails";
 
 const RootScreen = () => {
@@ -16,6 +16,7 @@ const RootScreen = () => {
   if (isError) {
     return <ErrorScreen error={error} />;
   }
+
 
   return (
     <>

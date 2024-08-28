@@ -7,10 +7,14 @@ import ErrorScreen from "@/layout/screen/ErrorScreen";
 import { useAuth } from "@/providers/AuthProvider";
 import { ArrowLeft } from "lucide-react-native";
 import AccountDetails from "@/feature/account/component/AccountDetails";
+import useViewAccountDetails from "@/feature/account/hooks/useViewAccountDetails";
+import AccountWithNoBook from "@/feature/account/component/AccountWithNoBook";
 
 const RootScreen = () => {
   const { id } = useLocalSearchParams();
-  const { data, isLoading, isError, error } = useAccountDetails(id as string);
+  const { data, isLoading, isError, error } = useViewAccountDetails(
+    id as string
+  );
 
   if (isLoading) return <LoadingScreen />;
   if (isError) {
@@ -21,7 +25,7 @@ const RootScreen = () => {
     <>
       <DetailsHeader />
       <View className="bg-white flex-1 p-4">
-        <AccountDetails {...data} />
+        <AccountWithNoBook {...data} />
       </View>
     </>
   );

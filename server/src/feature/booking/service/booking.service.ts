@@ -72,6 +72,14 @@ class BookingService {
 
     return transactions;
   };
+
+  getAllUserTransactions = async (ownerID: string) => {
+    const transactions = await this.bookingRepository.getAllByHitsButPopulatedRider({
+      $and: [{ recipientID: ownerID }, { status: "done" }],
+    });
+
+    return transactions;
+  };
 }
 
 export default BookingService;

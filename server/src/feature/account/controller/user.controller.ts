@@ -7,12 +7,12 @@ import BookingRepository from "../../booking/repository/booking.repository";
 
 class UserController {
   private service: AccountService;
-  private bookingRequestService: BookingRequestService;
   private bookingRepository: BookingRepository;
+  private bookingService: BookingService;
   constructor() {
     this.service = new AccountService();
-    this.bookingRequestService = new BookingRequestService();
     this.bookingRepository = new BookingRepository();
+    this.bookingService = new BookingService();
   }
 
   profileDetails = expressAsyncHandler(async (req: Request, res: Response) => {
@@ -65,6 +65,19 @@ class UserController {
       message: "Fetched Successfully",
     });
   });
+
+  public getAllTransactions = expressAsyncHandler(
+    async (req: Request, res: Response) => {
+      const { UID } = req.user;
+
+      const transaction = await this.bookingService.getAllUserTransactions(UID);
+
+      res.status(200).json({
+        payload: transaction,
+        message: "Fetched successfully",
+      });
+    }
+  );
 }
 
 export default new UserController();

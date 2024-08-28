@@ -21,16 +21,11 @@ interface Props extends IAccount {
 }
 
 const AccountDetails: FC<Props> = ({ _id, status, ...props }) => {
-
-
   return (
     <>
       <ProfileDetails {...props}>
-        <XStack className="w-full space-x-4">
-          <BookingButton
-            targetID={_id as string}
-            status={props.bookingStatus}
-          />
+        <XStack className="w-full space-x-4  h-[52px]">
+        
 
           <MessageButton targetID={_id as string} />
         </XStack>
@@ -51,12 +46,10 @@ const MessageButton = ({ targetID }: ButtonProps) => {
   return (
     <Button
       className="flex-1 ml-2"
-      variant="outlined"
       onPress={() => mutation.mutate("")}
     >
       <View className="flex-1 flex-row justify-center items-center space-x-2">
-        <MessageSquare color="black" />
-        <Text className="text-base"> Message</Text>
+        <Text className="text-base text-white"> Message</Text>
       </View>
     </Button>
   );

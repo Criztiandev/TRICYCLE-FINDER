@@ -31,7 +31,7 @@ class AccountController {
   });
 
   accountDetails = expressAsyncHandler(async (req: Request, res: Response) => {
-    const { UID: ownerID } = req.user;
+    const { UID: ownerID } = req.params;
     const { id: accountUD } = req.user;
 
     const credentials = await this.service.getDetails(ownerID);
@@ -55,6 +55,20 @@ class AccountController {
     });
   });
 
+
+  getAccountDetails = expressAsyncHandler(async (req: Request, res: Response) => {
+    const { id: targetID } = req.params;
+
+    const credentials = await this.service.getDetails(targetID);
+
+
+    if (!credentials) throw new Error("Account doest exist");
+
+    res.status(200).json({
+      payload: credentials,
+      message: "Fetched Successfully",
+    });
+  });
   logout = expressAsyncHandler(async (req: Request, res: Response) => {
     const { id: UID } = req.user;
 

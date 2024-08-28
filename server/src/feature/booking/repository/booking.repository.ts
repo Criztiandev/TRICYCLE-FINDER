@@ -53,6 +53,21 @@ class BookingRepository {
       });
   };
 
+  public getAllByHitsButPopulatedRider = async (
+    hits: FilterQuery<IBooking>,
+    select?: string
+  ) => {
+    return this.model
+      .find(hits)
+      .lean()
+      .select(select || "")
+      .populate({
+        path: "riderID",
+        select: "firstName lastName phoneNumber email",
+      });
+  };
+
+
   public create = async (payload: IBooking) => {
     return await this.model.create(payload);
   };

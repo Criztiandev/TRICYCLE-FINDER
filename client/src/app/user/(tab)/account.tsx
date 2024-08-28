@@ -19,12 +19,10 @@ const RootScreen = () => {
     <>
       <AccountHeader />
       <ScreenBaseLayout>
-        <View className="p-4">
+        <View className="p-4 flex justify-center items-center flex-1">
           <ProfileDetails {...data} />
 
-          <YStack>
-            <Text className="text-lg my-4">Recent Transactions</Text>
-          </YStack>
+   
         </View>
       </ScreenBaseLayout>
     </>

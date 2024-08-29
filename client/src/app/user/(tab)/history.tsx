@@ -3,7 +3,7 @@ import ScreenBaseLayout from "@/layout/ScreenBaseLayout";
 import { FlashList } from "@shopify/flash-list";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
-import { Files, MessageCircle } from "lucide-react-native";
+import { Files, MessageCircle, Star } from "lucide-react-native";
 import { Text, TouchableOpacity, View } from "react-native";
 import Input from "@/common/components/ui/Input";
 import AccountBlob from "@/feature/account/component/AccountBlob";
@@ -23,7 +23,6 @@ const RootScreen = () => {
   if (isLoading) return <LoadingScreen />;
   if (isError) return <ErrorScreen />;
 
-
   return (
     <>
       <TransactionHeader />
@@ -33,43 +32,56 @@ const RootScreen = () => {
             data={data?.reverse()}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }: { item: any }) => (
-              <TouchableOpacity onPress={() => router.push(`/rider/details/${item?.riderID?._id}`)}>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push(`/rider/details/${item?.riderID?._id}`)
+                }
+              >
                 <View className="w-full  px-4 py-4 pb-2">
-                <View className="flex-1  rounded-md  ">
-                  <View className="border border-gray-300">
-                    {/* Profile */}
-                    <XStack className=" p-4 space-x-4">
-                      <Avatar />
-                      <YStack>
-                        <Text className="text-[18px]">
-                          {item?.riderID?.firstName || "John"}{" "}
-                          {item?.riderID?.lastName || "Doe"}
-                        </Text>
-                        <Text className="text-small text-gray-500/70">
-                          {item?.riderID?.phoneNumber || "094888282838"}
-                        </Text>
-                      </YStack>
-                    </XStack>
+                  <View className="flex-1  rounded-md  ">
+                    <View className="border border-gray-300">
+                      {/* Profile */}
+                      <XStack className=" p-4 space-x-4">
+                        <XStack className="justify-between items-center w-full">
+                          <XStack>
+                            <Avatar />
+                            <YStack>
+                              <Text className="text-[18px]">
+                                {item?.riderID?.firstName || "John"}{" "}
+                                {item?.riderID?.lastName || "Doe"}
+                              </Text>
+                              <Text className="text-small text-gray-500/70">
+                                {item?.riderID?.phoneNumber || "094888282838"}
+                              </Text>
+                            </YStack>
+                          </XStack>
 
-                    {/* Details */}
-                    <XStack className="flex-col p-4 space-y-4">
-                      <View className="flex flex-row space-x-2 border border-gray-400 rounded-full px-4 py-1 flex-shrink-1">
-                        <Text className="text-base">Pick up:</Text>
-                        <Text className="text-base">
-                          {item?.pickupLocation}
-                        </Text>
-                      </View>
+                          <XStack>
+                            <Star color="#f1c40f" />
+                            <Text>5</Text>
+                          </XStack>
+                        </XStack>
+                      </XStack>
 
-                      <View className="flex flex-row space-x-2 border border-gray-400 rounded-full px-4 py-1 flex-shrink-1">
-                        <Text className="text-base">Drop off:</Text>
-                        <Text className="text-base">
-                          {item?.dropoffLocation}
-                        </Text>
-                      </View>
-                    </XStack>
+                      {/* Details */}
+                      <XStack className="flex-col p-4 space-y-4">
+                        <View className="flex flex-row space-x-2 border border-gray-400 rounded-full px-4 py-1 flex-shrink-1">
+                          <Text className="text-base">Pick up:</Text>
+                          <Text className="text-base">
+                            {item?.pickupLocation}
+                          </Text>
+                        </View>
+
+                        <View className="flex flex-row space-x-2 border border-gray-400 rounded-full px-4 py-1 flex-shrink-1">
+                          <Text className="text-base">Drop off:</Text>
+                          <Text className="text-base">
+                            {item?.dropoffLocation}
+                          </Text>
+                        </View>
+                      </XStack>
+                    </View>
                   </View>
                 </View>
-              </View>
               </TouchableOpacity>
             )}
             estimatedItemSize={100}

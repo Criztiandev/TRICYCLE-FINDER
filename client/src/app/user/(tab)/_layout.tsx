@@ -1,6 +1,14 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { Disc, History, Home, Search, UserCircle } from "lucide-react-native";
+import {
+  Bell,
+  Bike,
+  Disc,
+  History,
+  Home,
+  Search,
+  UserCircle,
+} from "lucide-react-native";
 
 const RootLayout = () => {
   return (
@@ -40,6 +48,16 @@ const RootLayout = () => {
           title: "Search",
           tabBarIcon: (props) => (
             <Search color={props.focused ? "black" : props.color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="session"
+        options={{
+          title: "Session",
+          tabBarIcon: (props) => (
+            <Bike color={props.focused ? "black" : props.color} />
           ),
         }}
       />

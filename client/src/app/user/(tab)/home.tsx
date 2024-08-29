@@ -19,18 +19,8 @@ const RootScreen = () => {
     isLoading: ridersLoading,
     isError: ridersError,
   } = useRiderList();
-  const {
-    data: sessionData,
-    isLoading: sessionLoading,
-    isError: sessionError,
-  } = useBookingSession("user");
-  const router = useRouter();
 
-  useEffect(() => {
-    if (sessionData?.riderID) {
-      router.push(`/booking/user-session/${sessionData.riderID}`);
-    }
-  }, [sessionData, router]);
+  const router = useRouter();
 
   const handleRiderPress = useCallback(
     (riderId: string) => {
@@ -39,34 +29,36 @@ const RootScreen = () => {
     [router]
   );
 
-  if (ridersLoading || sessionLoading) return <LoadingScreen />;
-  if (ridersError || sessionError) return <ErrorScreen />;
+  if (ridersLoading) return <LoadingScreen />;
+  if (ridersError) return <ErrorScreen />;
 
   return (
     <>
       <HomeScreenHeader />
       <ScreenBaseLayout>
-       <View className="flex-1 pb-24">
-       {riders?.length > 0 ? (
-          <FlashList
-            data={riders?.reverse()}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }: { item: IAccount }) => (
-              <TouchableOpacity
-                onPress={() => handleRiderPress(item._id as string)}
-              >
-                <AccountBlob {...item} />
-              </TouchableOpacity>
-            )}
-            estimatedItemSize={100}
-          />
-        ) : (
-          <View className="flex-1 justify-center items-center space-y-2">
-            <Box color="black" size={64} />
-            <Text className="text-2xl font-bold">The is no available rider</Text>
-          </View>
-        )}
-       </View>
+        <View className="flex-1 pb-24">
+          {riders?.length > 0 ? (
+            <FlashList
+              data={riders?.reverse()}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }: { item: IAccount }) => (
+                <TouchableOpacity
+                  onPress={() => handleRiderPress(item._id as string)}
+                >
+                  <AccountBlob {...item} />
+                </TouchableOpacity>
+              )}
+              estimatedItemSize={100}
+            />
+          ) : (
+            <View className="flex-1 justify-center items-center space-y-2">
+              <Box color="black" size={64} />
+              <Text className="text-2xl font-bold">
+                There is no available rider
+              </Text>
+            </View>
+          )}
+        </View>
       </ScreenBaseLayout>
     </>
   );
@@ -82,7 +74,6 @@ const HomeScreenHeader = () => {
   return (
     <Stack.Screen
       options={{
-    
         headerRight: () => (
           <XStack>
             <Button variant="ghost" size="icon" onPress={handleMessagePress}>
@@ -96,3 +87,6 @@ const HomeScreenHeader = () => {
 };
 
 export default RootScreen;
+
+// Session tab
+// Rating tab1

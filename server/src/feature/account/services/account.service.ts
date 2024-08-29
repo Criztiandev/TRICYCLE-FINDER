@@ -16,7 +16,6 @@ class AccountService {
       "-password -role"
     );
 
-    console.log(credentials)
 
     return credentials;
   };

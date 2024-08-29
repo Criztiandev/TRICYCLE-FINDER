@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React, { FC, useEffect, useRef } from "react";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
-import { MessageSquare } from "lucide-react-native";
+import { MessageSquare, Star } from "lucide-react-native";
 import useCreateConversation from "@/feature/conversation/hooks/useCreateConversation";
 import ProfileDetails from "./ProfileDetails";
 import { IAccount } from "../interface/account.interface";
@@ -14,6 +14,8 @@ import InputField from "@/common/components/form/InputField";
 import YStack from "@/common/components/stacks/YStack";
 import { IBooking } from "@/feature/booking/interface/booking.interface";
 import useCancelRequest from "@/feature/booking/hooks/useCancelRequest";
+import SelectField from "@/common/components/form/SelectField";
+import useRateRider from "@/feature/rider/hooks/useRiderRating";
 
 interface Props extends IAccount {
   status?: string;
@@ -25,8 +27,7 @@ const AccountDetails: FC<Props> = ({ _id, status, ...props }) => {
     <>
       <ProfileDetails {...props}>
         <XStack className="w-full space-x-4  h-[52px]">
-        
-
+          <RatingButton riderID={_id as string} />
           <MessageButton targetID={_id as string} />
         </XStack>
       </ProfileDetails>
@@ -47,77 +48,59 @@ const MessageButton = ({ targetID }: ButtonProps) => {
     <Button
       className="flex-1 ml-2"
       onPress={() => mutation.mutate("")}
+      variant="outlined"
     >
       <View className="flex-1 flex-row justify-center items-center space-x-2">
-        <Text className="text-base text-white"> Message</Text>
+        <Text className="text-base text-black"> Message</Text>
       </View>
     </Button>
   );
 };
 
-const BookingButton = ({ targetID, status }: ButtonProps) => {
+const RatingButton = ({ riderID }: { riderID: string }) => {
   const bottomSheetRef = useRef<BottomSheetModal | null>(null);
+  const { form, mutation } = useRateRider(riderID);
 
-  // Request Mutation
-  const { mutation: requestMutation, form: bookingRequestForm } =
-    useRequestBooking(targetID as string);
-
-  const { mutation: cancelMutation } = useCancelRequest(targetID as string);
-
-  const onRequestSubmit = (
-    value: Pick<IBooking, "dropoffLocation" | "pickupLocation">
-  ) => {
-    requestMutation.mutate(value);
+  const toggleRatingSheet = () => {
+    bottomSheetRef.current?.present();
   };
 
-  const openBottomSheet = () => {
-    if (bottomSheetRef.current) {
-      bottomSheetRef.current.present();
-    }
+  const onRate = () => {
+    mutation.mutate(form.getValues());
+    bottomSheetRef.current?.close();
   };
 
-  const cancelRequest = () => {
-    cancelMutation.mutate("");
-  };
-
-  useEffect(() => {
-    if (requestMutation.isSuccess) {
-      bottomSheetRef.current?.close();
-    }
-  }, [requestMutation.isSuccess]);
   return (
     <>
-      <Button
-        className="flex-1 mr-2"
-        onPress={status === "pending" ? cancelRequest : openBottomSheet}
-      >
-        {status === "pending" ? "Cancel Book" : "Book"}
+      <Button onPress={() => toggleRatingSheet()} className="flex-1">
+        <View className="flex-row space-x-2 justify-center items-center">
+          <Star fill="#f1c40f" size={32} />
+          <Text className="text-white text-center text-lg ">Rate</Text>
+        </View>
       </Button>
 
-      <BottomSheet ref={bottomSheetRef} snapPoints={["50%"]}>
+      <BottomSheet ref={bottomSheetRef} snapPoints={["30%"]}>
         <View className="p-4">
-          <FormProvider {...bookingRequestForm}>
+          <FormProvider {...form}>
             <YStack className="space-y-4">
-              <Text className="text-2xl font-bold text-center ">Transport</Text>
-              <View>
-                <InputField
-                  label="Pickup Location"
-                  name="pickupLocation"
-                  placeholder="Enter your Pickup Location"
-                />
-              </View>
-              <View>
-                <InputField
-                  label="Drop off Location"
-                  name="dropoffLocation"
-                  placeholder="Enter your Dropoff location"
-                />
-              </View>
+              <SelectField
+                label="Rating"
+                name="rating"
+                options={[
+                  { label: "Select Rating", value: "", disabled: true },
+                  { label: "5 Star", value: 5 },
+                  { label: "4 Star", value: 4 },
+                  { label: "3 Star", value: 3 },
+                  { label: "2 Star", value: 2 },
+                  { label: "1 Star", value: 1 },
+                ]}
+              />
+
               <Button
-                disabled={requestMutation.isPending}
-                onPress={bookingRequestForm.handleSubmit(onRequestSubmit)}
+                disabled={mutation.isPending}
+                onPress={form.handleSubmit(onRate)}
               >
-                Book
+                Rate
               </Button>
             </YStack>
           </FormProvider>

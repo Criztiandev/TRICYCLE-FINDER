@@ -27,6 +27,7 @@ class RiderController {
     });
   });
 
+
   fetchAllRiderByStatus = expressAsyncHandler(
     async (req: Request, res: Response) => {
       const { UID } = req.user;

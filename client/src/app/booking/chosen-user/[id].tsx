@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
 import React from "react";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
@@ -42,46 +48,48 @@ const RootScreen = () => {
   }
 
   return (
-    <>
-      <View className="bg-white flex-1 p-4  pt-24">
-        <ProfileDetails {...data}>
-          <XStack className="w-full space-x-4">
-            {data?.status === "pending" ? (
-              <AcceptButton
-                userID={id as string}
-                bookingRequestID={data?._id as string}
-              />
-            ) : (
-              <DoneButton
-                userID={id as string}
-                bookingRequestID={data?._id as string}
-              />
-            )}
-            <MessageButton riderID={id as string} />
-          </XStack>
+    <SafeAreaView style={{ flexGrow: 1, backgroundColor: "white" }}>
+      <ScrollView style={{ flex: 1, borderWidth: 1 }}>
+        <View className="bg-white p-4  pt-24" style={{ flex: 1 }}>
+          <ProfileDetails {...data}>
+            <View style={{ flex: 1, gap: 16 }}>
+              {data?.status === "pending" ? (
+                <AcceptButton
+                  userID={id as string}
+                  bookingRequestID={data?._id as string}
+                />
+              ) : (
+                <DoneButton
+                  userID={id as string}
+                  bookingRequestID={data?._id as string}
+                />
+              )}
+              <MessageButton riderID={id as string} />
+            </View>
 
-          <View className="w-full ">
-            <Text className="text-base text-gray-400 font-semibold">
-              Details
-            </Text>
+            <View className="w-full ">
+              <Text className="text-base text-gray-400 font-semibold">
+                Details
+              </Text>
 
-            <YStack className="my-4">
-              <XStack className="w-full justify-between items-center">
-                <Text className="text-base">Pick-up Location:</Text>
-                <Text className="text-base">{data?.pickupLocation}</Text>
-              </XStack>
+              <YStack className="my-4">
+                <XStack className="w-full justify-between items-center">
+                  <Text className="text-base">Pick-up Location:</Text>
+                  <Text className="text-base">{data?.pickupLocation}</Text>
+                </XStack>
 
-              <View className="border w-full border-gray-200 my-3"></View>
+                <View className="border w-full border-gray-200 my-3"></View>
 
-              <XStack className="w-full justify-between items-center">
-                <Text className="text-base">Dropoff Location:</Text>
-                <Text className="text-base">{data?.dropoffLocation}</Text>
-              </XStack>
-            </YStack>
-          </View>
-        </ProfileDetails>
-      </View>
-    </>
+                <XStack className="w-full justify-between items-center">
+                  <Text className="text-base">Dropoff Location:</Text>
+                  <Text className="text-base">{data?.dropoffLocation}</Text>
+                </XStack>
+              </YStack>
+            </View>
+          </ProfileDetails>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -115,15 +123,8 @@ const DetailsHeader: React.FC = () => {
 const MessageButton = ({ riderID }: MessageButtonProps) => {
   const { mutation } = useCreateConversation(riderID as string);
   return (
-    <Button
-      className="flex-1 ml-2"
-      variant="outlined"
-      onPress={() => mutation.mutate("")}
-    >
-      <View className="flex-1 flex-row justify-center items-center space-x-2">
-        <MessageSquare color="black" />
-        <Text className="text-base"> Message</Text>
-      </View>
+    <Button onPress={() => mutation.mutate("")}>
+      <Text>Message</Text>
     </Button>
   );
 };
@@ -138,8 +139,8 @@ const AcceptButton = ({
   const { mutation } = useAcceptRequest(userID, bookingRequestID);
 
   return (
-    <Button className="flex-1" onPress={() => mutation.mutate("")}>
-      Accept
+    <Button onPress={() => mutation.mutate("")}>
+      <Text>Accept</Text>
     </Button>
   );
 };
@@ -154,8 +155,8 @@ const DoneButton = ({
   const { mutation } = useBookingDone(userID, bookingRequestID);
 
   return (
-    <Button className="flex-1" onPress={() => mutation.mutate("")}>
-      Done
+    <Button onPress={() => mutation.mutate("")}>
+      <Text>Done</Text>
     </Button>
   );
 };

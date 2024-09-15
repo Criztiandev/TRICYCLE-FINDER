@@ -32,14 +32,6 @@ const BaseSelect: FC<SelectProps> = ({
   placeholder,
   ...props
 }) => {
-  const query = useFetch({
-    queryKey: ["course"],
-    queryFn: async () => await PublicAxios.get("/course/all"),
-  });
-
-  if (query.isLoading) return <LoadingScreen />;
-  if (query.isError) return <ErrorScreen />;
-
   return (
     <View className="">
       {label && (

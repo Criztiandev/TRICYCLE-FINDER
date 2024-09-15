@@ -85,8 +85,6 @@ const BookingButton = ({ targetID, status }: ButtonProps) => {
   const { mutation: acceptMutation } = useAcceptRequest(targetID as string);
   const { mutation: doneMutation } = useBookingDone(targetID as string);
 
-  console.log(status);
-
   const handleAcceptMutation = () => {
     acceptMutation.mutate("");
   };
@@ -101,7 +99,7 @@ const BookingButton = ({ targetID, status }: ButtonProps) => {
           status === "accepted" ? handleDoneMuatation : handleAcceptMutation
         }
       >
-        {status === "accepted" ? "Done" : "Accept"}
+        <Text>{status === "accepted" ? "Done" : "Accept"}</Text>
       </Button>
     </>
   );

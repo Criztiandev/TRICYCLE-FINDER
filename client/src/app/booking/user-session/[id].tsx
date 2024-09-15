@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
 import React, { useEffect, useRef } from "react";
 import { Href, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
@@ -55,18 +61,24 @@ const RootScreen = () => {
   }
 
   return (
-    <>
-      <DetailsHeader />
-      <View className="bg-white flex-1 p-4 justify-center">
-        <ProfileDetails {...data}>
-          <XStack className="w-full space-x-4">
+    <SafeAreaView style={{ flexGrow: 1, backgroundColor: "white" }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          borderWidth: 1,
+        }}
+      >
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <ProfileDetails {...data} />
+          <View style={{ marginTop: 16, gap: 16 }}>
             <RatingButton riderID={id as string} />
-
             <MessageButton riderID={id as string} />
-          </XStack>
-        </ProfileDetails>
+          </View>
+        </View>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
@@ -95,15 +107,8 @@ const DetailsHeader: React.FC = () => {
 const MessageButton = ({ riderID }: MessageButtonProps) => {
   const { mutation } = useCreateConversation(riderID as string);
   return (
-    <Button
-      className="flex-1 ml-2"
-      variant="outlined"
-      onPress={() => mutation.mutate("")}
-    >
-      <View className="flex-1 flex-row justify-center items-center space-x-2">
-        <MessageSquare color="black" />
-        <Text className="text-base"> Message</Text>
-      </View>
+    <Button onPress={() => mutation.mutate("")}>
+      <Text className="text-white text-center text-base "> Message</Text>
     </Button>
   );
 };
@@ -128,11 +133,8 @@ const RatingButton = ({ riderID }: { riderID: string }) => {
 
   return (
     <>
-      <Button className="flex-1" onPress={() => toggleRatingSheet()}>
-        <View className="flex-row space-x-2 justify-center items-center">
-          <Star fill="#f1c40f" size={32} />
-          <Text className="text-white text-center text-lg ">Rate</Text>
-        </View>
+      <Button onPress={() => toggleRatingSheet()}>
+        <Text className="text-white text-center text-base ">Rate</Text>
       </Button>
 
       <BottomSheet ref={bottomSheetRef} snapPoints={["30%"]}>
@@ -156,7 +158,7 @@ const RatingButton = ({ riderID }: { riderID: string }) => {
                 disabled={mutation.isPending}
                 onPress={form.handleSubmit(onRate)}
               >
-                Book
+                <Text className="text-white text-center text-base ">Rate</Text>
               </Button>
             </YStack>
           </FormProvider>

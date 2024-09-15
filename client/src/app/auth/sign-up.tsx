@@ -40,8 +40,7 @@ const RootScreen = () => {
 
     const payload = form.getValues();
 
-    console.log(payload);
-    // mutation.mutate(payload as IAccount);
+    mutation.mutate(payload as IAccount);
   };
   return (
     <>

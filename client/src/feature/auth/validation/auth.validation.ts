@@ -13,13 +13,14 @@ export const RegistrationValidation = accountValidation.extend({
 export const PersonalInfoStepValidation = accountValidation.pick({
   firstName: true,
   lastName: true,
-  dateOfBirth: true,
-  gender: true,
 });
 
 export const AccountInfoStepValidation = accountValidation.pick({
-  userName: true,
   email: true,
   password: true,
-  location: true,
+});
+
+export const OtherInfoStepValidation = accountValidation.pick({
+  course: true,
+  department: true,
 });

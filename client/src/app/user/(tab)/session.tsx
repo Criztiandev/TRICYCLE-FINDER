@@ -3,11 +3,11 @@ import ScreenBaseLayout from "@/layout/ScreenBaseLayout";
 import XStack from "@/common/components/stacks/XStack";
 import Button from "@/common/components/ui/Button";
 import { Bike, MessageCircle, Search } from "lucide-react-native";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import useRiderList from "@/feature/rider/hooks/useRiderList";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomSheet from "@/common/components/ui/BottomSheet";
 import useRiderDetails from "@/feature/rider/hooks/useRiderDetails";
@@ -51,30 +51,36 @@ export default RootScreen;
 const HomeScreenHeader = () => {
   const router = useRouter();
 
+  const handleMessagePress = useCallback(() => {
+    router.push("/user/conversation/list" as Href<string>);
+  }, [router]);
+
   return (
-    <>
-      <Stack.Screen
-        options={{
-          headerRight: () => (
-            <XStack>
-              {/* Message Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onPress={() =>
-                  router.push("/user/conversation/list" as Href<string>)
-                }
-              >
-                <MessageCircle color="white" fill="white" />
-              </Button>
-            </XStack>
-          ),
-        }}
-      />
-    </>
+    <Stack.Screen
+      options={{
+        headerStyle: {
+          backgroundColor: "#179151",
+        },
+        headerRight: () => (
+          <View
+            style={{
+              padding: 8,
+            }}
+          >
+            <TouchableOpacity
+              onPress={handleMessagePress}
+              style={{
+                borderRadius: 100,
+              }}
+            >
+              <MessageCircle color="white" fill="white" />
+            </TouchableOpacity>
+          </View>
+        ),
+      }}
+    />
   );
 };
-
 const RiderDetails = ({
   id,
   onNavigate,

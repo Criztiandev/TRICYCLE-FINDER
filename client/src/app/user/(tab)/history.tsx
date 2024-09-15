@@ -10,7 +10,7 @@ import AccountBlob from "@/feature/account/component/AccountBlob";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import useRiderRequestList from "@/feature/rider/hooks/useRiderRequestList";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import useBookingSession from "@/feature/booking/hooks/useBookingSession";
 import useRiderTransactionList from "@/feature/rider/hooks/useRiderTransactionList";
 import Avatar from "@/common/components/ui/Avatar";
@@ -109,26 +109,33 @@ export default RootScreen;
 const TransactionHeader = () => {
   const router = useRouter();
 
+  const handleMessagePress = useCallback(() => {
+    router.push("/user/conversation/list" as Href<string>);
+  }, [router]);
+
   return (
-    <>
-      <Stack.Screen
-        options={{
-          headerRight: () => (
-            <XStack>
-              {/* Message Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onPress={() =>
-                  router.push("/rider/conversation/list" as Href<string>)
-                }
-              >
-                <MessageCircle color="black" />
-              </Button>
-            </XStack>
-          ),
-        }}
-      />
-    </>
+    <Stack.Screen
+      options={{
+        headerStyle: {
+          backgroundColor: "#179151",
+        },
+        headerRight: () => (
+          <View
+            style={{
+              padding: 8,
+            }}
+          >
+            <TouchableOpacity
+              onPress={handleMessagePress}
+              style={{
+                borderRadius: 100,
+              }}
+            >
+              <MessageCircle color="white" fill="white" />
+            </TouchableOpacity>
+          </View>
+        ),
+      }}
+    />
   );
 };

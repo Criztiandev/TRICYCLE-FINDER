@@ -1,9 +1,5 @@
 import React from "react";
 import InputField from "@/common/components/form/InputField";
-import SelectField from "@/common/components/form/SelectField";
-import DatePickerField from "@/common/components/form/DatePickerField";
-import YStack from "@/common/components/stacks/YStack";
-import { View } from "lucide-react-native";
 
 const PersonalInfoStep = () => {
   return (

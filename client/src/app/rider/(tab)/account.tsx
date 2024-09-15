@@ -8,10 +8,14 @@ import LoadingScreen from "@/layout/screen/LoadingScreen";
 import useProfile from "@/feature/account/hooks/useProfile";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import ProfileDetails from "@/feature/account/component/ProfileDetails";
-import { View } from "react-native";
+import { Text, View } from "react-native";
+import useLogout from "@/feature/account/hooks/useLogout";
 
 const RootScreen = () => {
   const { data, isLoading, isError, error } = useProfile();
+  const { mutation } = useLogout();
+
+  const handleLogout = () => mutation.mutate("");
 
   if (isLoading) return <LoadingScreen />;
   if (isError) return <ErrorScreen error={error} />;
@@ -20,7 +24,21 @@ const RootScreen = () => {
       <AccountHeader />
       <ScreenBaseLayout>
         <View className="p-16">
-        <ProfileDetails {...data} />
+          <ProfileDetails {...data} />
+
+          <View style={{ padding: 16, gap: 16 }}>
+            <Button onPress={handleLogout} disabled={mutation.isPending}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >   
+                Logout
+              </Text>
+            </Button>
+          </View>
         </View>
       </ScreenBaseLayout>
     </>
@@ -36,17 +54,7 @@ const AccountHeader = () => {
     <>
       <Stack.Screen
         options={{
-          headerRight: () => (
-            <XStack>
-              <Button
-                variant="ghost"
-                size="icon"
-                onPress={() => router.navigate("/account/settings")}
-              >
-                <Settings color="black" />
-              </Button>
-            </XStack>
-          ),
+          headerRight: () => <XStack></XStack>,
         }}
       />
     </>

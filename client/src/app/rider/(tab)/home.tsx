@@ -37,27 +37,33 @@ const RootScreen = () => {
     <>
       <HomeScreenHeader />
       <ScreenBaseLayout>
-       <>
-       {requestList?.length > 0 ?   <FlashList
-          data={requestList?.reverse()}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }: { item: any }) => (
-            <TouchableOpacity
-              onPress={() =>
-                router.push(
-                  `/booking/chosen-user/${item?.recipientID?._id}` as Href<string>
-                )
-              }
-            >
-              <AccountBlob {...item?.recipientID} />
-            </TouchableOpacity>
+        <>
+          {requestList?.length > 0 ? (
+            <FlashList
+              data={requestList?.reverse()}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }: { item: any }) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    router.push(
+                      `/booking/chosen-user/${item?.recipientID?._id}` as Href<string>
+                    )
+                  }
+                >
+                  <AccountBlob {...item?.recipientID} />
+                </TouchableOpacity>
+              )}
+              estimatedItemSize={100}
+            />
+          ) : (
+            <View className="flex-1 justify-center items-center space-y-2">
+              <Book color="black" size={64} />
+              <Text className="text-2xl font-bold">
+                The is no available request
+              </Text>
+            </View>
           )}
-          estimatedItemSize={100}
-        /> :  <View className="flex-1 justify-center items-center space-y-2">
-        <Book color="black" size={64} />
-        <Text className="text-2xl font-bold">The is no available request</Text>
-      </View>}
-       </>
+        </>
       </ScreenBaseLayout>
     </>
   );
@@ -80,15 +86,14 @@ const HomeScreenHeader = () => {
           headerRight: () => (
             <XStack>
               {/* Message Button */}
-              <Button
-                variant="ghost"
-                size="icon"
+              <TouchableOpacity
+                style={{ paddingHorizontal: 16 }}
                 onPress={() =>
                   router.push("/rider/conversation/list" as Href<string>)
                 }
               >
-                <MessageCircle color="black" />
-              </Button>
+                <MessageCircle color="white" />
+              </TouchableOpacity>
             </XStack>
           ),
         }}

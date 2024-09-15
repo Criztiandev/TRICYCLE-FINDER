@@ -30,7 +30,7 @@ interface MessageButtonProps {
   riderID: string;
 }
 
-const SOCKET_URL = "http://192.168.1.11:4000";
+const SOCKET_URL = "http://192.168.1.2:4000";
 
 const RootScreen = () => {
   const router = useRouter();

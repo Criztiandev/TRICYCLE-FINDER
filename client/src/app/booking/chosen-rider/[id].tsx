@@ -1,9 +1,19 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React, { useEffect, useRef } from "react";
 import { Href, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
-import { ArrowLeft, MessageSquare } from "lucide-react-native";
+import {
+  ArrowLeft,
+  Bike,
+  Check,
+  Facebook,
+  Info,
+  MessageCircle,
+  MessageSquare,
+  Phone,
+  User,
+} from "lucide-react-native";
 import ProfileDetails from "@/feature/account/component/ProfileDetails";
 import XStack from "@/common/components/stacks/XStack";
 import { IAccount } from "@/feature/account/interface/account.interface";
@@ -20,6 +30,7 @@ import { io } from "socket.io-client";
 import Toast from "react-native-toast-message";
 import { useAuth } from "@/providers/AuthProvider";
 import useLocalStorage from "@/common/hooks/storage/useLocalStorage";
+import { Image } from "expo-image";
 
 interface Props extends IAccount {
   status?: string;
@@ -37,7 +48,7 @@ interface MessageButtonProps {
   riderID: string;
 }
 
-const SOCKET_URL = "http://192.168.1.11:4000";
+const SOCKET_URL = "http://192.168.1.2:4000";
 
 const RootScreen = () => {
   const { user } = useAuth();
@@ -89,23 +100,104 @@ const RootScreen = () => {
   if (isError) {
     return <ErrorScreen error={error} />;
   }
+
   return (
     <>
       <DetailsHeader />
-      <View className="bg-white flex-1 p-4 justify-center">
-        <ProfileDetails {...data}>
-          <XStack className="w-full space-x-4">
-            <BookingButton
-              riderID={id as string}
-              bookingID={data?._id as string}
-              availability={data?.availability}
-              status={data?.status}
-            />
+      <ScrollView style={{ flexGrow: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 24,
+          }}
+        >
+          <Image
+            source={require("@/assets/images/rider-avatar.jpg")}
+            style={{
+              width: 300,
+              height: 300,
+              borderRadius: 999,
+              borderWidth: 5,
+              borderColor: "#1cb967",
+            }}
+          />
 
-            <MessageButton riderID={id as string} />
-          </XStack>
-        </ProfileDetails>
-      </View>
+          <View>
+            <Text
+              style={{ fontSize: 24, fontWeight: "bold", marginVertical: 16 }}
+            >
+              Driver Information
+            </Text>
+          </View>
+
+          <BookingButton
+            riderID={id as string}
+            bookingID={data?._id as string}
+            availability={data?.availability}
+            status={data?.status}
+          />
+
+          <View style={{ justifyContent: "flex-start", gap: 24 }}>
+            <View
+              style={{ flexDirection: "row", gap: 16, borderBottomWidth: 2 }}
+            >
+              <User color="black" size={32} />
+              <Text style={{ fontSize: 22 }}>
+                {data?.firstName} {data?.lastName}
+              </Text>
+            </View>
+
+            <View
+              style={{ flexDirection: "row", gap: 16, borderBottomWidth: 2 }}
+            >
+              <Phone color="black" size={32} />
+              <Text style={{ fontSize: 22 }}>{data?.phoneNumber}</Text>
+            </View>
+
+            <View
+              style={{ flexDirection: "row", gap: 16, borderBottomWidth: 2 }}
+            >
+              <Facebook color="black" size={32} />
+              <Text style={{ fontSize: 22 }}>
+                {data?.facebookAccount || "No available account"}
+              </Text>
+            </View>
+
+            {data?.bodyNumber && (
+              <View
+                style={{ flexDirection: "row", gap: 16, borderBottomWidth: 2 }}
+              >
+                <Info color="black" size={32} />
+                <Text style={{ fontSize: 22 }}>
+                  {data?.bodyNumber || "Body Number is not provided"}
+                </Text>
+              </View>
+            )}
+
+            {data?.licenseNumber && (
+              <View
+                style={{ flexDirection: "row", gap: 16, borderBottomWidth: 2 }}
+              >
+                <Info color="black" size={32} />
+                <Text style={{ fontSize: 22 }}>
+                  {data?.licenseNumber || "N/A"}
+                </Text>
+              </View>
+            )}
+
+            {data?.mtop && (
+              <View
+                style={{ flexDirection: "row", gap: 16, borderBottomWidth: 2 }}
+              >
+                <Info color="black" size={32} />
+                <Text style={{ fontSize: 22 }}>{data?.mtop || "N/A"}</Text>
+              </View>
+            )}
+          </View>
+        </View>
+      </ScrollView>
     </>
   );
 };
@@ -118,14 +210,25 @@ export default RootScreen;
  */
 const DetailsHeader: React.FC = () => {
   const router = useRouter();
+  const { id } = useLocalSearchParams();
   return (
     <Stack.Screen
       options={{
         title: "Account Details",
         headerLeft: () => (
-          <TouchableOpacity className="mr-4" onPress={() => router.back()}>
-            <ArrowLeft color="black" />
+          <TouchableOpacity
+            style={{
+              marginRight: 16,
+            }}
+            onPress={() => router.back()}
+          >
+            <ArrowLeft color="white" />
           </TouchableOpacity>
+        ),
+        headerRight: () => (
+          <View style={{ flexDirection: "row", gap: 16 }}>
+            <MessageButton riderID={id as string} />
+          </View>
         ),
       }}
     />
@@ -140,16 +243,9 @@ const DetailsHeader: React.FC = () => {
 const MessageButton = ({ riderID }: MessageButtonProps) => {
   const { mutation } = useCreateConversation(riderID as string);
   return (
-    <Button
-      className="flex-1 ml-2"
-      variant="outlined"
-      onPress={() => mutation.mutate("")}
-    >
-      <View className="flex-1 flex-row justify-center items-center space-x-2">
-        <MessageSquare color="black" />
-        <Text className="text-base"> Message</Text>
-      </View>
-    </Button>
+    <TouchableOpacity onPress={() => mutation.mutate("")}>
+      <MessageCircle color="white" fill="white" />
+    </TouchableOpacity>
   );
 };
 
@@ -198,13 +294,11 @@ const BookingButton = ({
 
   return (
     <>
-      <Button
-        className="flex-1 mr-2"
-        onPress={handlePress}
-        disabled={isDisabled}
-      >
-        {buttonText}
-      </Button>
+      <View style={{ marginBottom: 24 }}>
+        <Button onPress={handlePress} disabled={isDisabled}>
+          <Text style={{ fontSize: 18, color: "white" }}> {buttonText}</Text>
+        </Button>
+      </View>
 
       <BottomSheet ref={bottomSheetRef} snapPoints={["50%"]}>
         <View className="p-4">
@@ -229,7 +323,7 @@ const BookingButton = ({
                 disabled={isPending}
                 onPress={form.handleSubmit(onRequest)}
               >
-                Book
+                <Text style={{ fontSize: 18, color: "white" }}>Book</Text>
               </Button>
             </YStack>
           </FormProvider>

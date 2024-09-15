@@ -4,12 +4,14 @@ import { Home, Search, UserCircle } from "lucide-react-native";
 
 const RootLayout = () => {
   return (
-    <Stack screenOptions={{
-      headerStyle: {
-        backgroundColor: "#EA2027",
-      },
-      headerTintColor:"white"
-    }}>
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#179151",
+        },
+        headerTintColor: "white",
+      }}
+    >
       <Stack.Screen name="chat/[id]" />
       <Stack.Screen name="list/index" />
     </Stack>

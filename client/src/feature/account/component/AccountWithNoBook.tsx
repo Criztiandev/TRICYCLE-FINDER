@@ -100,7 +100,7 @@ const RatingButton = ({ riderID }: { riderID: string }) => {
                 disabled={mutation.isPending}
                 onPress={form.handleSubmit(onRate)}
               >
-                Rate
+                <Text style={{ fontSize: 18, fontWeight: "bold" }}>Rate</Text>
               </Button>
             </YStack>
           </FormProvider>

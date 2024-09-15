@@ -11,7 +11,6 @@ class AuthService {
 
   public registerUser = async (payload: IAccount) => {
     const { email, password } = payload;
-    let status = 200;
 
     // check if user exist
     const existingUser = await this.accountService.isAccountExist({ email });

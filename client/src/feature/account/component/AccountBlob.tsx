@@ -6,9 +6,8 @@ import { IAccount } from "../interface/account.interface";
 
 const AccountBlob = (props: IAccount) => {
   return (
-    <View className="p-4 flex-row space-x-4 items-center ">
-      <Avatar />
-
+    <View className="p-4 flex-row space-x-4 items-center " style={{ gap: 16 }}>
+      <Avatar source={require("@/assets/images/rider-avatar.jpg")} />
       <YStack>
         <Text className="text-[18px]">
           {props.firstName || "John"} {props.lastName || "Doe"}

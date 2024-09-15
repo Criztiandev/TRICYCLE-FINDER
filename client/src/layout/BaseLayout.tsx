@@ -17,7 +17,7 @@ interface Props {
 
 const BaseLayout: FC<Props> = ({ children, ...props }) => {
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white" style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -26,9 +26,10 @@ const BaseLayout: FC<Props> = ({ children, ...props }) => {
         <View
           style={{
             ...props,
+            position: "relative",
             paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
           }}
-          className={cn("flex-1 p-2", props.className)}
+          className={cn("flex-1", props.className)}
         >
           {children}
         </View>

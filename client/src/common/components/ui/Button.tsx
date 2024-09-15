@@ -17,7 +17,7 @@ interface Props extends PropsWithChildren, TouchableOpacityProps {
 const buttonVariants = cva(" px-4 py-3 text-center rounded-[10px] ", {
   variants: {
     variant: {
-      default: "bg-primary",
+      default: "bg-black",
       outlined: "border border-gray-300",
       secondary: "bg-secondary",
       ghost: "bg-transparent border-none",
@@ -45,27 +45,21 @@ const Button: FC<Props> = ({
     "text-center text-base text-primary",
     props.textClassName
   );
-  const renderContent = () => {
-    if (typeof children === "string") {
-      return <Text className={textClasses}>{children}</Text>;
-    }
-    if (typeof children === "object" && children !== null) {
-      const childrenAsString = String(children);
-      if (childrenAsString.trim() !== "[object Object]") {
-        return <Text className={textClasses}>{childrenAsString}</Text>;
-      }
-    }
-    return children;
-  };
+
   return (
     <TouchableOpacity
       {...props}
-      className={cn(
-        `${props.disabled && "opacity-60"}`,
-        buttonVariants({ variant, size, className })
-      )}
+      style={{
+        backgroundColor: "#94b143",
+        padding: 14,
+        borderRadius: 999,
+        minWidth: 200,
+        justifyContent: "center",
+        alignItems: "center",
+        shadowColor: "black",
+      }}
     >
-      {renderContent()}
+      {children}
     </TouchableOpacity>
   );
 };

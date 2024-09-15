@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import accountModel from "../feature/account/model/account.model";
-import messageModel from "../model/message.model";
-import { AccountSchemaValue } from "../interface/account.interface";
 import conversationModel from "../model/conversation.model";
-import { io } from "..";
 import mongoose from "mongoose";
 
 class ConversationController {
@@ -45,7 +42,7 @@ class ConversationController {
         return {
           _id: conversation._id,
           participants: otherParticipant,
-          lastMessage: conversation.lastMessage,
+          lastMessage: (conversation as any)?.lastMessage,
           messages: conversation.messages,
         };
       });

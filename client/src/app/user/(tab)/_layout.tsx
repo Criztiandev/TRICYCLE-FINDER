@@ -14,9 +14,6 @@ const RootLayout = () => {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: {
-          backgroundColor: "#EA2027",
-        },
         headerTintColor: "white",
         tabBarLabel: () => null,
         tabBarStyle: {

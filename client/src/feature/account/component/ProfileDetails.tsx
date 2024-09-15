@@ -25,7 +25,17 @@ const ProfileDetails: FC<Props> = ({
     <View className="relative">
       <View className="  rounded-[5px] justify-center items-center"></View>
       <YStack className="justify-center items-center space-y-4">
-      {props.role === "user"? <UserAvatar size={150} /> :   <Avatar size={150} />}
+        {props.role === "user" ? (
+          <UserAvatar
+            size={150}
+            source={require("@/assets/images/user-avatar.jpg")}
+          />
+        ) : (
+          <Avatar
+            size={150}
+            source={require("@/assets/images/user-avatar.jpg")}
+          />
+        )}
         {/* Full Name */}
         <YStack className="justify-center justify-items-center">
           <Text className="text-2xl font-medium">

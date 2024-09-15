@@ -54,10 +54,6 @@ io.on("connection", (socket) => {
   socket.on("conversation-messages", (messages) => {
     console.log(messages);
   });
-
-  // socket.emit("conversation-leave", conversationID);
-  // socket.off("conversation-join");
-  // socket.off("conversation-message");
 });
 
 app.use(notFound);

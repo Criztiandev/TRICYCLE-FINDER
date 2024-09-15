@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 import AuthProvider from "@/providers/AuthProvider";
 import Toast from "react-native-toast-message";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import "../../global.css";
 
 const client = new QueryClient();
 

@@ -4,24 +4,26 @@ import { Disc, File, Home, Search, UserCircle } from "lucide-react-native";
 
 const RootLayout = () => {
   return (
-    <Tabs  screenOptions={{
-      headerStyle: {
-        backgroundColor: "#EA2027",
-      },
-      headerTintColor: "white",
-      tabBarLabel: () => null,
-      tabBarStyle: {
-        position: "absolute",
-        bottom: 0,
-        marginHorizontal: 16,
-        marginBottom: 12,
-        height: 64,
-        borderRadius: 100,
-        shadowOpacity: 0,
-        elevation: 0,
-        backgroundColor: "#eeeeee",
-      },
-    }}>
+    <Tabs
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#179151",
+        },
+        headerTintColor: "white",
+        tabBarLabel: () => null,
+        tabBarStyle: {
+          position: "absolute",
+          bottom: 0,
+          marginHorizontal: 16,
+          marginBottom: 12,
+          height: 64,
+          borderRadius: 100,
+          shadowOpacity: 0,
+          elevation: 0,
+          backgroundColor: "#eeeeee",
+        },
+      }}
+    >
       <Tabs.Screen
         name="home"
         options={{

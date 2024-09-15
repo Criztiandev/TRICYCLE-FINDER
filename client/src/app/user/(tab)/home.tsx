@@ -74,12 +74,24 @@ const HomeScreenHeader = () => {
   return (
     <Stack.Screen
       options={{
+        headerStyle: {
+          backgroundColor: "#179151",
+        },
         headerRight: () => (
-          <XStack>
-            <Button variant="ghost" size="icon" onPress={handleMessagePress}>
+          <View
+            style={{
+              padding: 8,
+            }}
+          >
+            <TouchableOpacity
+              onPress={handleMessagePress}
+              style={{
+                borderRadius: 100,
+              }}
+            >
               <MessageCircle color="white" fill="white" />
-            </Button>
-          </XStack>
+            </TouchableOpacity>
+          </View>
         ),
       }}
     />
@@ -87,6 +99,3 @@ const HomeScreenHeader = () => {
 };
 
 export default RootScreen;
-
-// Session tab
-// Rating tab1

@@ -6,6 +6,10 @@ import {
   PickerItemProps,
   PickerProps,
 } from "@react-native-picker/picker";
+import useFetch from "@/common/hooks/query/useFetch";
+import { PublicAxios } from "@/lib/axios/instances";
+import LoadingScreen from "@/layout/screen/LoadingScreen";
+import ErrorScreen from "@/layout/screen/ErrorScreen";
 
 export interface SelectOption extends PickerItemProps {
   disabled?: boolean;
@@ -28,8 +32,16 @@ const BaseSelect: FC<SelectProps> = ({
   placeholder,
   ...props
 }) => {
+  const query = useFetch({
+    queryKey: ["course"],
+    queryFn: async () => await PublicAxios.get("/course/all"),
+  });
+
+  if (query.isLoading) return <LoadingScreen />;
+  if (query.isError) return <ErrorScreen />;
+
   return (
-    <View>
+    <View className="">
       {label && (
         <Text
           className={cn(
@@ -42,10 +54,11 @@ const BaseSelect: FC<SelectProps> = ({
       )}
 
       <View
-        className={cn(
-          "border h-[52px] w-full rounded-md border-primary focus:border-primary-selected focus:border-2 ",
-          props.containerClass
-        )}
+        style={{
+          borderWidth: 3,
+          borderColor: "#179151",
+          borderRadius: 10,
+        }}
       >
         <Picker {...props} enabled={!props.disabled}>
           {placeholder && (

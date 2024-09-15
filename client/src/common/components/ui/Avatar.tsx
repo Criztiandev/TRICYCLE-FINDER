@@ -9,7 +9,7 @@ import RiderAvatar from "@/assets/images/rider-avatar.jpg";
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
-interface Props extends Omit<ImageProps, 'source'> {
+interface Props extends Omit<ImageProps, "source"> {
   fallback?: string;
   imageClass?: string;
   size?: number;
@@ -23,30 +23,25 @@ const Avatar: FC<Props> = ({
   ...props
 }) => {
   const [imageFailed, setImageFailed] = useState(false);
-  
+
   return (
     <View
-      className={cn(
-        "border border-gray-300 rounded-full overflow-hidden justify-center items-center",
-        props.className
-      )}
-      style={{ width: size, height: size }}
+      style={{
+        width: size,
+        height: size,
+      }}
     >
-      {imageFailed ? (
-        <View className="w-full h-full justify-center items-center bg-slate-200">
-          <Text className="text-xl font-bold ">{fallback || "T"}</Text>
-        </View>
-      ) : (
-        <Image
-          {...props}
-          source={source}
-          className={cn("flex-1 w-full bg-[#0553]", props.imageClass)}
-          placeholder={blurhash}
-          contentFit="cover"
-          transition={1000}
-          onError={() => setImageFailed(true)}
-        />
-      )}
+      <Image
+        {...props}
+        source={source}
+        style={{
+          flex: 1,
+        }}
+        placeholder={blurhash}
+        contentFit="cover"
+        transition={1000}
+        onError={() => setImageFailed(true)}
+      />
     </View>
   );
 };

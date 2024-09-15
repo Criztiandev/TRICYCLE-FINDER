@@ -28,8 +28,6 @@ const RootScreen: React.FC = () => {
     phoneNumber: data?.recipient.phoneNumber,
   };
 
-  console.log(JSON.stringify(data, null, 2));
-
   return (
     <>
       <ConversationHeader
@@ -64,20 +62,31 @@ const ConversationHeader: React.FC<{
       options={{
         title: recipientName,
         headerLeft: () => (
-          <TouchableOpacity onPress={() => router.back()} className="p-2 mr-4">
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="p-2 mr-4"
+            style={{ marginRight: 15 }}
+          >
             <ArrowLeft color="white" />
           </TouchableOpacity>
         ),
 
         headerRight: () => (
-          <Button
-            variant="ghost"
+          <TouchableOpacity
             onPress={() =>
               Linking.openURL(`tel:${recipientNumber || "094828828383"} `)
             }
           >
             <PhoneCall color="white" />
-          </Button>
+          </TouchableOpacity>
+          // <Button
+          //   variant="ghost"
+          //   onPress={() =>
+          //     Linking.openURL(`tel:${recipientNumber || "094828828383"} `)
+          //   }
+          // >
+
+          // </Button>
         ),
       }}
     />

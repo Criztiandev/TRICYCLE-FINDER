@@ -29,6 +29,7 @@ const Input: FC<InputProps> = ({
   optional,
   type = "default",
   className,
+  style,
   textClassName,
   ...props
 }) => {
@@ -72,9 +73,11 @@ const Input: FC<InputProps> = ({
       )}
       <View
         className={cn(
-          "flex-row items-center px-2 h-[52px] rounded-md border border-primary focus-within:border-primary-selected focus-within:border-2"
+          "flex-row items-center h-[52px] border-[3px] border-primary rounded-lg px-4 py-2 focus-within:border-primary-selected focus-within:border-2 "
         )}
-        style={props.style}
+        style={{
+          borderRadius: 12,
+        }}
       >
         {dir === "left" && renderIcon()}
         <TextInput

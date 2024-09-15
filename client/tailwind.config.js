@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  // NOTE: Update this to include the paths to all of your component files.
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  presets: [require("nativewind/preset")],
   theme: {
     extend: {
       colors: {
@@ -21,7 +23,7 @@ module.exports = {
       },
       borderColor: {
         primary: {
-          DEFAULT: "#8F9098",
+          DEFAULT: "#179151",
           selected: "#1e1e1e",
         },
         secondary: "#5c5c5c",

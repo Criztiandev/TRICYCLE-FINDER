@@ -21,8 +21,9 @@ const useLogout = () => {
       await storage.removeItem("accessToken");
       await storage.removeItem("refreshToken");
 
-      delete ProtectedAxios.defaults.headers.common["Authorization"];
       queryClient.clear();
+      router.dismissAll();
+      delete ProtectedAxios.defaults.headers.common["Authorization"];
 
       router.dismissAll();
       router.replace("/");

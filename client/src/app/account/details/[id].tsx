@@ -7,16 +7,18 @@ import ErrorScreen from "@/layout/screen/ErrorScreen";
 import { useAuth } from "@/providers/AuthProvider";
 import { ArrowLeft, DollarSign } from "lucide-react-native";
 import AccountDetails from "@/feature/account/component/AccountDetails";
+import Button from "@/common/components/ui/Button";
+import useLogout from "@/feature/account/hooks/useLogout";
 
 const RootScreen = () => {
   const { id } = useLocalSearchParams();
   const { data, isLoading, isError, error } = useAccountDetails(id as string);
 
+
   if (isLoading) return <LoadingScreen />;
   if (isError) {
     return <ErrorScreen error={error} />;
   }
-
 
   return (
     <>

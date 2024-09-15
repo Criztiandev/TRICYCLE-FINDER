@@ -101,15 +101,14 @@ const TransactionHeader = () => {
           headerRight: () => (
             <XStack>
               {/* Message Button */}
-              <Button
-                variant="ghost"
-                size="icon"
+              <TouchableOpacity
+                style={{ paddingHorizontal: 16 }}
                 onPress={() =>
                   router.push("/rider/conversation/list" as Href<string>)
                 }
               >
-                <MessageCircle color="black" />
-              </Button>
+                <MessageCircle color="white" />
+              </TouchableOpacity>
             </XStack>
           ),
         }}

@@ -82,8 +82,11 @@ const MessageButton = ({ targetID }: ButtonProps) => {
 };
 
 const BookingButton = ({ targetID, status }: ButtonProps) => {
-  const { mutation: acceptMutation } = useAcceptRequest(targetID as string);
-  const { mutation: doneMutation } = useBookingDone(targetID as string);
+  const { mutation: acceptMutation } = useAcceptRequest(
+    targetID as string,
+    "23"
+  );
+  const { mutation: doneMutation } = useBookingDone(targetID as string, "@3");
 
   const handleAcceptMutation = () => {
     acceptMutation.mutate("");

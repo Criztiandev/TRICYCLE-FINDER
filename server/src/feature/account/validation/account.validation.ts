@@ -11,15 +11,12 @@ const accountValidation = z.object({
     .min(2, "Last name must be at least 2 characters long")
     .max(64, "Last name cannot exceed 64 characters"),
 
-  course: z
-    .string()
-    .min(2, "Course must be at least 2 characters long")
-    .max(64, "Course cannot exceed 64 characters"),
+  course: z.string().optional(),
+  department: z.string().optional(),
 
-  department: z
-    .string()
-    .min(2, "Department must be at least 2 characters long")
-    .max(64, "Department cannot exceed 64 characters"),
+  facebook: z.string().optional(),
+  licenseNumber: z.string().optional(),
+  bodyNumber: z.string().optional(),
 
   email: z
     .string()

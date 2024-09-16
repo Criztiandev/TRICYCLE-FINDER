@@ -5,17 +5,12 @@ import LoadingScreen from "@/layout/screen/LoadingScreen";
 import ErrorScreen from "@/layout/screen/ErrorScreen";
 import {
   ArrowLeft,
-  Bike,
-  Check,
   Facebook,
   Info,
   MessageCircle,
-  MessageSquare,
   Phone,
   User,
 } from "lucide-react-native";
-import ProfileDetails from "@/feature/account/component/ProfileDetails";
-import XStack from "@/common/components/stacks/XStack";
 import { IAccount } from "@/feature/account/interface/account.interface";
 import Button from "@/common/components/ui/Button";
 import useCreateConversation from "@/feature/conversation/hooks/useCreateConversation";
@@ -29,7 +24,6 @@ import useRiderDetails from "@/feature/rider/hooks/useRiderDetails";
 import { io } from "socket.io-client";
 import Toast from "react-native-toast-message";
 import { useAuth } from "@/providers/AuthProvider";
-import useLocalStorage from "@/common/hooks/storage/useLocalStorage";
 import { Image } from "expo-image";
 
 interface Props extends IAccount {
@@ -116,8 +110,8 @@ const RootScreen = () => {
           <Image
             source={require("@/assets/images/rider-avatar.jpg")}
             style={{
-              width: 300,
-              height: 300,
+              width: 250,
+              height: 250,
               borderRadius: 999,
               borderWidth: 5,
               borderColor: "#1cb967",
@@ -139,7 +133,9 @@ const RootScreen = () => {
             status={data?.status}
           />
 
-          <View style={{ justifyContent: "flex-start", gap: 24 }}>
+          <View
+            style={{ justifyContent: "flex-start", gap: 24, marginBottom: 32 }}
+          >
             <View
               style={{ flexDirection: "row", gap: 16, borderBottomWidth: 2 }}
             >
@@ -165,18 +161,26 @@ const RootScreen = () => {
               </Text>
             </View>
 
-            {data?.bodyNumber && (
-              <View
-                style={{ flexDirection: "row", gap: 16, borderBottomWidth: 2 }}
-              >
-                <Info color="black" size={32} />
-                <Text style={{ fontSize: 22 }}>
-                  {data?.bodyNumber || "Body Number is not provided"}
-                </Text>
-              </View>
-            )}
+            <>
+              {data?.bodyNumber ? (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 16,
+                    borderBottomWidth: 2,
+                  }}
+                >
+                  <Info color="black" size={32} />
+                  <Text style={{ fontSize: 22 }}>
+                    {data?.bodyNumber || "Body Number is not provided"}
+                  </Text>
+                </View>
+              ) : (
+                <></>
+              )}
+            </>
 
-            {data?.licenseNumber && (
+            {data?.licenseNumber ? (
               <View
                 style={{ flexDirection: "row", gap: 16, borderBottomWidth: 2 }}
               >
@@ -185,15 +189,19 @@ const RootScreen = () => {
                   {data?.licenseNumber || "N/A"}
                 </Text>
               </View>
+            ) : (
+              <></>
             )}
 
-            {data?.mtop && (
+            {data?.mtop ? (
               <View
                 style={{ flexDirection: "row", gap: 16, borderBottomWidth: 2 }}
               >
                 <Info color="black" size={32} />
                 <Text style={{ fontSize: 22 }}>{data?.mtop || "N/A"}</Text>
               </View>
+            ) : (
+              <></>
             )}
           </View>
         </View>
@@ -217,12 +225,12 @@ const DetailsHeader: React.FC = () => {
         title: "Account Details",
         headerLeft: () => (
           <TouchableOpacity
-            style={{
-              marginRight: 16,
-            }}
+            style={{ marginRight: 16 }}
             onPress={() => router.back()}
           >
-            <ArrowLeft color="white" />
+            <Text>
+              <ArrowLeft color="white" />
+            </Text>
           </TouchableOpacity>
         ),
         headerRight: () => (
